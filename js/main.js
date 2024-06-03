@@ -282,13 +282,3 @@ const pagoReserva = (destino, horario, mes, dia) => {
 }
 
 menu()
-
-//Revisar codigo
-//Optimizarlo
-//Sacar ;
-//Revisar validaciones
-//Agregar pago con tarjeta
-//Testear
-//Ponerlo bonito
-//Revisar consignas
-//validacion mail
