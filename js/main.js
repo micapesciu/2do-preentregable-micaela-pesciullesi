@@ -20,6 +20,12 @@ const menu = () => {
         //Selcción de destino
         while (!destinoValido) {
             destinoReservado = prompt("Seleccione su destino 🌍 \n 1. Mendoza \n 2. Cordoba \n 3. Neuquen \n 4. Tierra del Fuego \n 5. Salta \n 6. Jujuy \n 7. Chubut \n 8. Santa Cruz")
+            
+            if (destinoReservado === null) {
+                alert("Gracias por comunicarse con Aerolíneas PilotHouse 👨‍✈️👩‍✈️✈️")
+                menu()
+            }
+
             destinoReservado = parseInt(destinoReservado)
 
             if (destinoReservado >= 1 && destinoReservado <= 8 && !isNaN(destinoReservado)) {
@@ -32,6 +38,12 @@ const menu = () => {
         //Selcción de mes
         while (!mesValido) {
             mesReservado = prompt("Seleccione un mes 📅 \n 1. Enero \n 2. Febrero \n 3. Marzo \n 4. Abril \n 5. Mayo \n 6. Junio \n 7. Julio \n 8. Agosto \n 9. Septiembre \n 10. Octubre \n 11. Noviembre \n 12. Diciembre")
+            
+            if (mesReservado === null) {
+                alert("Gracias por comunicarse con Aerolíneas PilotHouse 👨‍✈️👩‍✈️✈️")
+                menu()
+            }
+
             mesReservado = parseInt(mesReservado)
 
             if (mesReservado >= 1 && mesReservado <= 12 && !isNaN(mesReservado)) {
@@ -44,6 +56,12 @@ const menu = () => {
         //Selcción de día
         while (!diaValido) {
             diaReservado = prompt("Seleccione un día del mes del 1 al 31 📆")
+
+            if (diaReservado === null) {
+                alert("Gracias por comunicarse con Aerolíneas PilotHouse 👨‍✈️👩‍✈️✈️")
+                menu()
+            }
+
             diaReservado = parseInt(diaReservado)
 
             if (diaReservado >= 1 && diaReservado <= 31 && !isNaN(diaReservado)) {
@@ -56,6 +74,12 @@ const menu = () => {
         //Selcción de horario
         while (!horarioValido) {
             horarioReservado = prompt("Seleccione un horario 🕙 \n 1. 08:00hs \n 2. 09:30hs \n 3. 11:00hs \n 4. 14:30hs \n 5. 17:00hs \n 6. 19:45hs \n 7. 22:15hs")
+            
+            if (horarioReservado === null) {
+                alert("Gracias por comunicarse con Aerolíneas PilotHouse 👨‍✈️👩‍✈️✈️")
+                menu()
+            }
+
             horarioReservado = parseInt(horarioReservado)
 
             if (horarioReservado >= 1 && horarioReservado <= 8 && !isNaN(horarioReservado)) {
@@ -76,6 +100,7 @@ const menu = () => {
             reservas.push({ destino, horario, mes, dia })
             datosPasajero(destino, horario, mes, dia)
         } else {
+            alert("Gracias por comunicarse con Aerolíneas PilotHouse 👨‍✈️👩‍✈️✈️")
             menu()
         }
     } else {
