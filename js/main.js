@@ -280,8 +280,4 @@ const pagoReserva = (destino, horario, mes, dia) => {
         alert('Su reserva fue cancelada por falta de confirmación de pago ☹️')
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> htmlcss
 menu()
