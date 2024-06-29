@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('../assets/fondo.jpg');
+    background-size: cover;
+    background-repeat: no-repeat; 
+    margin: 0;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #004aad;
+    border-bottom: 1px solid white;
+}
+header img {
+    width: 120px;
+    height: 85px;
+}
+header nav ul {
+    font-family: "rubik", "Gill Sans";
+    list-style-type: none;
+    display: flex;
+}
+header nav ul li {
+    padding: 15px;
+}
+header nav ul li a {
+    color: whitesmoke;
+    text-decoration: none;
+    font-size: 1.3rem;
+}
+header nav ul li a:hover {
+    text-decoration: none;
+    font-weight: bold;
+    color: #a9d9f4;
+    margin: 10px;
+    transition: 1s;
+}
+
+.mensaje-reserva {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    height: 70vh; /* Asegura que ocupe toda la altura de la pantalla */
+    font-size: 2rem;
+    font-family: "Rubik", "Gill Sans";
+    color: whitesmoke;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* Sombra */
+}
+
+.boton-reserva{
+    background-color: #004aad;
+    margin-top: 30px;
+    padding: 15px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra */
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+.modal-reserva{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    border: 1px solid rgb(39, 39, 39);
+    border-radius: 20px;
+    margin-left: 400px;
+    margin-right: 400px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    height: 70vh; 
+    font-size: 1rem;
+    font-family: "Rubik", "Gill Sans";
+    color: black;
+    background-color: rgba(29, 30, 43, 0.764);;
+    box-shadow: 20px 20px 30px rgba(0, 0, 0.0, 0.9); /* Sombra */
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #004aad;
+    font-family: "Rubik", "Gill Sans", sans-serif;
+    color: whitesmoke;
+    text-align: center;
+    padding: 5px;
+}
+
