@@ -1,70 +1,70 @@
 // Clase Reserva
 class Reserva {
     constructor(destino, horario, anio, mes, dia) {
-        this.destino = destino;
-        this.horario = horario;
-        this.anio = anio;
-        this.mes = mes;
-        this.dia = dia;
+        this.destino = destino
+        this.horario = horario
+        this.anio = anio
+        this.mes = mes
+        this.dia = dia
     }
 }
 
 // Clase Pasajero
 class Pasajero {
     constructor(nombrePasajero, dni, celular, fechaDeNacimiento, email) {
-        this.nombrePasajero = nombrePasajero;
-        this.dni = dni;
-        this.celular = celular;
-        this.fechaDeNacimiento = fechaDeNacimiento;
-        this.email = email;
+        this.nombrePasajero = nombrePasajero
+        this.dni = dni
+        this.celular = celular
+        this.fechaDeNacimiento = fechaDeNacimiento
+        this.email = email
     }
 }
 
 // Clase Pago
 class Pago {
     constructor(tarjeta, cuotas, precio) {
-        this.tarjeta = tarjeta;
-        this.cuotas = cuotas;
-        this.totalPorCuota = (precio / cuotas).toFixed(2); // Ajustar el cálculo aquí
+        this.tarjeta = tarjeta
+        this.cuotas = parseInt(cuotas, 10)
+        this.totalPorCuota = (precio / this.cuotas).toFixed(2)
     }
 }
 
 // Inicio de Menu, pide DESTINO, FECHA Y HORARIO.
 function menuReserva() {
     // Por si se vuelve a este menú, se borra lo cargado en los datos del pasajero
-    const datosPasajero = document.getElementById('modal-reserva');
+    const datosPasajero = document.getElementById('modal-reserva')
     if (datosPasajero) {
-        datosPasajero.remove();
+        datosPasajero.remove()
     }
 
     // Carga de destinos en el combo
-    const destinos = ["Mendoza", "Cordoba", "Neuquen", "Tierra del Fuego", "Salta", "Jujuy", "Chubut", "Santa Cruz"];
-    let menuReserva = document.createElement('div');
-    menuReserva.id = 'modal-reserva';
+    const destinos = ["Mendoza", "Cordoba", "Neuquen", "Tierra del Fuego", "Salta", "Jujuy", "Chubut", "Santa Cruz"]
+    let menuReservaDiv = document.createElement('div')
+    menuReservaDiv.id = 'modal-reserva'
 
-    let selectDestinos = document.createElement('select');
-    selectDestinos.id = 'destinos';
+    let selectDestinos = document.createElement('select')
+    selectDestinos.id = 'destinos'
 
     destinos.forEach(destino => {
-        const opcion = document.createElement('option');
-        opcion.value = destino;
-        opcion.textContent = destino;
-        selectDestinos.appendChild(opcion);
+        const opcion = document.createElement('option')
+        opcion.value = destino
+        opcion.textContent = destino
+        selectDestinos.appendChild(opcion)
     });
 
     // Carga de horarios en el combo
-    const horarios = ["08:00hs", "09:30hs", "11:00hs", "14:30hs", "17:00hs", "19:45hs", "22:15hs"];
-    let selectHorarios = document.createElement('select');
-    selectHorarios.id = 'horarios';
+    const horarios = ["08:00hs", "09:30hs", "11:00hs", "14:30hs", "17:00hs", "19:45hs", "22:15hs"]
+    let selectHorarios = document.createElement('select')
+    selectHorarios.id = 'horarios'
 
     horarios.forEach(horario => {
-        const opcion = document.createElement('option');
-        opcion.value = horario;
-        opcion.textContent = horario;
-        selectHorarios.appendChild(opcion);
+        const opcion = document.createElement('option')
+        opcion.value = horario
+        opcion.textContent = horario
+        selectHorarios.appendChild(opcion)
     });
 
-    menuReserva.innerHTML = `
+    menuReservaDiv.innerHTML = `
         <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
         <h2>Seleccioná tu destino</h2>
         <div>
@@ -73,7 +73,7 @@ function menuReserva() {
 
         <h2>Seleccioná la fecha</h2>
         <div>
-            <input type="text" id="calendario" placeholder="Busca una fecha">
+            <input type="text" id="calendario" placeholder="Busca una fecha" required>
         </div>
 
         <h2>Seleccioná tu horario</h2>
@@ -85,120 +85,126 @@ function menuReserva() {
             <button id="botonSiguiente" class="boton-reserva">Siguiente</button>
             <button id="botonCancelar" class="boton-reserva">Cancelar</button>
         </div>
-    `;
+    `
 
-    document.body.append(menuReserva);
+    document.body.append(menuReservaDiv)
 
     //Boton SIGUIENTE
     document.getElementById('botonSiguiente').addEventListener('click', () => {
-        guardarDatosReserva();
-    });
+        if (validarFormulario(menuReservaDiv)) {
+            guardarDatosReserva()
+        }
+    })
 
     //Boton CANCELAR
     document.getElementById('botonCancelar').addEventListener('click', () => {
-        window.location.href = '../index.html';
-    });
+        window.location.href = '../index.html'
+    })
 
     // Inicialización de flatpickr para el input de fecha
     flatpickr("#calendario", {
         dateFormat: "Y-m-d",
         minDate: "today"
-    });
+    })
 }
 
-function datosPasajero(menu) {
-    const menuReserva = document.getElementById('modal-reserva');
-    if (menuReserva) {
-        menuReserva.remove();
+function datosPasajero() {
+    const menuReservaDiv = document.getElementById('modal-reserva')
+    if (menuReservaDiv) {
+        menuReservaDiv.remove()
     }
 
-    const datosPasajero = document.createElement('div');
-    datosPasajero.id = 'modal-reserva';
-    datosPasajero.innerHTML = `
+    const datosPasajeroDiv = document.createElement('div')
+    datosPasajeroDiv.id = 'modal-reserva'
+    datosPasajeroDiv.innerHTML = `
         <h2>Ingresa tu nombre</h2>
         <div>
-            <input type="text" id="nombre" placeholder="Ingresa tu nombre">
+            <input type="text" id="nombre" placeholder="Ingresa tu nombre" required>
         </div>
 
         <h2>Ingresa tu DNI</h2>
         <div>
-            <input type="text" id="dni" placeholder="Ingresa tu DNI">
+            <input type="text" id="dni" placeholder="Ingresa tu DNI" required>
         </div>
 
         <h2>Ingresa tu número de celular</h2>
         <div>
-            <input type="text" id="celular" placeholder="Ingresa tu número de celular">
+            <input type="text" id="celular" placeholder="Ingresa tu número de celular" required>
         </div>
 
         <h2>Ingresa tu fecha de nacimiento</h2>
         <div>
-            <input type="text" id="cumpleanios" placeholder="Busca tu cumpleaños">
+            <input type="text" id="cumpleanios" placeholder="Busca tu cumpleaños" required>
         </div>
 
         <h2>Ingresa tu correo electrónico</h2>
         <div>
-            <input type="email" id="email" placeholder="Ingresa tu correo electrónico">
+            <input type="email" id="email" placeholder="Ingresa tu correo electrónico" required>
         </div>
 
         <div>
-        <button id="botonSiguiente" class="boton-reserva">Siguiente</button>
-        <button id="botonCancelar" class="boton-reserva">Cancelar</button>
+            <button id="botonSiguiente" class="boton-reserva">Siguiente</button>
+            <button id="botonAtras" class="boton-reserva">Atrás</button>
         </div>
-    `;
-    document.body.appendChild(datosPasajero);
+    `
+    document.body.appendChild(datosPasajeroDiv)
     
     //Boton SIGUIENTE
     document.getElementById('botonSiguiente').addEventListener('click', () => {
-        guardarDatosPasajero();
-    });
+        if (validarFormulario(datosPasajeroDiv)) {
+            guardarDatosPasajero()
+        }
+    })
         
-    //Boton CANCELAR
-    document.getElementById('botonCancelar').addEventListener('click', () => {
-        window.location.href = '../index.html';
-    });
+    //Boton ATRAS
+    document.getElementById('botonAtras').addEventListener('click', () => {
+        menuReserva()
+    })
 
     // Inicialización de flatpickr para el input de fecha
     flatpickr("#cumpleanios", {
         dateFormat: "Y-m-d",
-    });
+        maxDate: "today"
+    })
 }
 
 // Menu para el pago
 function datosPagos() {
-    const datosPasajero = document.getElementById('modal-reserva');
-    if (datosPasajero) {
-        datosPasajero.remove();
+
+    const mostrarResumenPago = document.getElementById('modal-reserva')
+    if (mostrarResumenPago) {
+        mostrarResumenPago.remove()
     }
 
-    const precio = 70000.00;
+    const precio = 70000.00
 
     // Carga de tarjetas en el combo
-    const tarjetas = ["VISA", "MasterCard", "American Express", "Naranja X", "HSBC"];
-    let selectTarjetas = document.createElement('select');
-    selectTarjetas.id = 'tarjetas';
+    const tarjetas = ["VISA", "MasterCard", "American Express", "Naranja X", "HSBC"]
+    let selectTarjetas = document.createElement('select')
+    selectTarjetas.id = 'tarjetas'
 
     tarjetas.forEach(tarjeta => {
-        const opcion = document.createElement('option');
-        opcion.value = tarjeta;
-        opcion.textContent = tarjeta;
-        selectTarjetas.appendChild(opcion);
-    });
+        const opcion = document.createElement('option')
+        opcion.value = tarjeta
+        opcion.textContent = tarjeta
+        selectTarjetas.appendChild(opcion)
+    })
 
     // Carga de cuotas en el combo
-    const cuotas = [1, 3, 6, 9, 12, 16, 24];
-    let selectCuotas = document.createElement('select');
-    selectCuotas.id = 'cuotas';
+    const cuotas = [1, 3, 6, 9, 12, 16, 24]
+    let selectCuotas = document.createElement('select')
+    selectCuotas.id = 'cuotas'
 
     cuotas.forEach(cuota => {
-        const opcion = document.createElement('option');
-        opcion.value = cuota;
-        opcion.textContent = `${cuota} cuota${cuota > 1 ? 's' : ''}`;
-        selectCuotas.appendChild(opcion);
-    });
+        const opcion = document.createElement('option')
+        opcion.value = cuota
+        opcion.textContent = `${cuota} cuota${cuota > 1 ? 's' : ''}`
+        selectCuotas.appendChild(opcion)
+    })
 
-    const datosPagos = document.createElement('div');
-    datosPagos.id = 'modal-reserva';
-    datosPagos.innerHTML = `
+    const datosPagosDiv = document.createElement('div')
+    datosPagosDiv.id = 'modal-reserva'
+    datosPagosDiv.innerHTML = `
         <h2>El total de su vuelo con la promoción especial de HOT SALE es de $70.000,00</h2>
         <p>Promoción válida sólo abonando con tarjetas de crédito 💳</p>
         <h2>Seleccioná tu tarjeta</h2>
@@ -209,34 +215,46 @@ function datosPagos() {
         <div>
             ${selectCuotas.outerHTML}
         </div>
+        <h3 id="totalPorCuota">Valor de cada cuota: $70000.00</h3> 
         <div>
-        <button id="botonSiguiente" class="boton-reserva">Siguiente</button>
-        <button id="botonCancelar" class="boton-reserva">Cancelar</button>
+            <button id="botonSiguiente" class="boton-reserva">Siguiente</button>
+            <button id="botonAtras" class="boton-reserva">Atrás</button>
         </div>
-    `;
-    document.body.appendChild(datosPagos);
+    `
+    document.body.appendChild(datosPagosDiv)
+
+    const selectCuotasElement = document.getElementById('cuotas')
+    if (selectCuotasElement) {
+        selectCuotasElement.addEventListener('change', () => {
+            const cuotasSeleccionadas = parseInt(selectCuotasElement.value, 10)
+            if (!isNaN(cuotasSeleccionadas) && cuotasSeleccionadas > 0) {
+                const totalPorCuota = (precio / cuotasSeleccionadas).toFixed(2)
+                document.getElementById('totalPorCuota').textContent = `Total por cuota: $${totalPorCuota}`
+            }
+        })
+    }
 
     //Boton SIGUIENTE
     document.getElementById('botonSiguiente').addEventListener('click', () => {
-        guardarDatosPago();
-    });
-    
-    //Boton CANCELAR
-    document.getElementById('botonCancelar').addEventListener('click', () => {
-        window.location.href = '../index.html';
-    });
+        guardarDatosPago()
+    })
+
+    //Boton ATRAS
+    document.getElementById('botonAtras').addEventListener('click', () => {
+        datosPasajero()
+    })
 }
 
 //SE GUARDAN LOS DATOS
 // Función para guardar los datos de la reserva
 function guardarDatosReserva() {
-    const destinoSeleccionado = document.getElementById('destinos').value;
-    const fechaSeleccionada = document.getElementById('calendario').value;
-    const horarioSeleccionado = document.getElementById('horarios').value;
-    const [anio, mes, dia] = fechaSeleccionada.split('-');
+    const destinoSeleccionado = document.getElementById('destinos').value
+    const fechaSeleccionada = document.getElementById('calendario').value
+    const horarioSeleccionado = document.getElementById('horarios').value
+    const [anio, mes, dia] = fechaSeleccionada.split('-')
     
     // Crear instancia de Reserva
-    reservaActual = new Reserva(destinoSeleccionado, horarioSeleccionado, anio, mes, dia);
+    reservaActual = new Reserva(destinoSeleccionado, horarioSeleccionado, anio, mes, dia)
 
     // Mostrar el resumen de pago con los datos de la reserva
     mostrarResumenPago(
@@ -251,19 +269,18 @@ function guardarDatosReserva() {
         null, // Tarjeta aún no seleccionada
         null, // Cuotas aún no seleccionadas
         null  // Total por cuota aún no calculado
-    );
+    )
 
-    datosPasajero();
-    console.log(reservaActual);
+datosPasajero()
 }
 
 // Función para guardar los datos del pasajero
 function guardarDatosPasajero() {
-    const nombreIngresado = document.getElementById('nombre').value;
-    const dniIngresado = document.getElementById('dni').value;
-    const celularIngresado = document.getElementById('celular').value;
-    const cumpleaniosIngresado = document.getElementById('cumpleanios').value;
-    const emailIngresado = document.getElementById('email').value;
+    const nombreIngresado = document.getElementById('nombre').value
+    const dniIngresado = document.getElementById('dni').value
+    const celularIngresado = document.getElementById('celular').value
+    const cumpleaniosIngresado = document.getElementById('cumpleanios').value
+    const emailIngresado = document.getElementById('email').value
 
     // Crear instancia de Pasajero
     pasajeroActual = new Pasajero(nombreIngresado, dniIngresado, celularIngresado, cumpleaniosIngresado, emailIngresado);
@@ -281,19 +298,19 @@ function guardarDatosPasajero() {
         null, // Tarjeta aún no seleccionada
         null, // Cuotas aún no seleccionadas
         null  // Total por cuota aún no calculado
-    );
+    )
 
     datosPagos()
-    console.log(pasajeroActual);
 }
 
 // Función para guardar los datos del pago
-function guardarDatosPago(precio) {
-    const tarjetaSeleccionada = document.getElementById('tarjetas').value;
-    const cuotasSeleccionadas = document.getElementById('cuotas').value;
+function guardarDatosPago() {
+    const tarjetaSeleccionada = document.getElementById('tarjetas').value
+    const cuotasSeleccionadas = document.getElementById('cuotas').value
+    const precio = 70000.00
 
     // Crear instancia de Pago
-    pagoActual = new Pago(tarjetaSeleccionada, cuotasSeleccionadas, precio);
+    pagoActual = new Pago(tarjetaSeleccionada, cuotasSeleccionadas, precio)
 
     // Mostrar el resumen de pago con los datos del pago
     mostrarResumenPago(
@@ -310,14 +327,13 @@ function guardarDatosPago(precio) {
         pagoActual.totalPorCuota
     );
 
-    mostrarResumenPago()
-    console.log(pagoActual);
+    mostrarResumenPago(destinoSeleccionado, fechaSeleccionada, horarioSeleccionado, nombreIngresado, dniIngresado, celularIngresado, cumpleaniosIngresado, emailIngresado, tarjetaSeleccionada, cuotasSeleccionadas, totalPorCuota)
 }
 
 function mostrarResumenPago(destinoSeleccionado, fechaSeleccionada, horarioSeleccionado, nombreIngresado, dniIngresado, celularIngresado, cumpleaniosIngresado, emailIngresado, tarjetaSeleccionada, cuotasSeleccionadas, totalPorCuota) {
-    const datosPagos = document.getElementById('modal-reserva');
-    if (datosPagos) {
-        datosPagos.remove();
+    const mostrarResumenPago = document.getElementById('modal-reserva')
+    if (mostrarResumenPago) {
+        mostrarResumenPago.remove()
     }
 
     // Crear el modal de resumen de pago
@@ -343,51 +359,27 @@ function mostrarResumenPago(destinoSeleccionado, fechaSeleccionada, horarioSelec
         <p>Número de cuotas: ${cuotasSeleccionadas}</p>
         <p>Total por cuota: $${totalPorCuota}</p>
 
-        <button id="aceptarResumenBtn" class="boton-reserva">Aceptar</button>
-        <button id="cancelarResumenBtn" class="boton-reserva">Cancelar</button>
-    `;
-    document.body.appendChild(resumenPago);
+        <button id="aceptarResumen" class="boton-reserva">Aceptar</button>
+        <button id="botonAtras" class="boton-reserva">Atrás</button>
+    `
+    document.body.appendChild(resumenPago)
 
-    // Añadir evento al botón "Aceptar"
-    document.getElementById('aceptarResumenBtn').addEventListener('click', () => {
+    // Botón Aceptar
+    document.getElementById('aceptarResumen').addEventListener('click', () => {
         resumenPago.remove();
         mostrarReservaExitosa(); // Llama a la función mostrarReservaExitosa al aceptar el resumen
-    });
+    })
 
-    // Añadir evento al botón "Cancelar"
-    document.getElementById('cancelarResumenBtn').addEventListener('click', () => {
-        resumenPago.remove();
-    });
+    //Boton ATRAS
+    document.getElementById('botonAtras').addEventListener('click', () => {
+        datosPagos()
+    })
 }
 
 function mostrarReservaExitosa() {
-    const resumenPago = document.getElementById('modal-reserva');
-    if (resumenPago) {
-        resumenPago.remove();
-    }
-
-    // Crear el modal de reserva exitosa
-    const reservaExitosa = document.createElement('div');
-    reservaExitosa.id = 'modal-reserva';
-    reservaExitosa.innerHTML = `
-        <h1>¡Reserva exitosa!</h1>
-        <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse!</h2>
-        <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
-
-        <button id="aceptarReservaExitosaBtn" class="boton-reserva">Aceptar</button>
-    `;
-    document.body.appendChild(reservaExitosa);
-
-    // Añadir evento al botón "Aceptar"
-    document.getElementById('aceptarReservaExitosaBtn').addEventListener('click', () => {
-        reservaExitosa.remove();
-    });
-}
-
-function mostrarReservaExitosa() {
-    const mostrarResumenPago = document.getElementById('modal-reserva');
+    const mostrarResumenPago = document.getElementById('modal-reserva')
     if (mostrarResumenPago) {
-        mostrarResumenPago.remove();
+        mostrarResumenPago.remove()
     }
 
     // Crear el modal de resumen de pago
@@ -398,14 +390,33 @@ function mostrarReservaExitosa() {
         <h2>¡Muchas gracias por elegir Aerolineas PilotHouse!</h2>
         <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
 
-        <button id="aceptarResumenBtn" class="boton-reserva">Aceptar</button>
+        <button id="aceptar" class="boton-reserva">Aceptar</button>
     `
     document.body.appendChild(reservaExitosa);
 
-    // Añadir evento al botón "Aceptar"
-    document.getElementById('aceptarResumenBtn').addEventListener('click', () => {
-        resumenPago.remove();
+    document.getElementById('aceptar').addEventListener('click', () => {
+        window.location.href = '../index.html';
     });
 }
 
-menuReserva();
+function validarFormulario(formulario) {
+    let camposRequeridos = formulario.querySelectorAll('input[required]')
+    let formularioValido = true
+
+    camposRequeridos.forEach(campo => {
+        if (!campo.value) {
+            campo.style.borderColor = 'red'
+            formularioValido = false
+        } else {
+            campo.style.borderColor = ''
+        }
+    });
+
+    return formularioValido
+}
+
+menuReserva()
+
+//FALTA AÑADIR FUNCIONES DE ORDEN SUPERIOR
+//FALTA STORAGE
+//FALTA DARLE MAS ESTILO AL CSS
