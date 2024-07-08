@@ -84,6 +84,19 @@ header nav ul li a:hover {
     box-shadow: 20px 20px 30px rgba(0, 0, 0.0, 0.9); 
 }
 
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Tres columnas iguales */
+    gap: 20px; /* Espacio entre los divs */
+    padding: 20px; /* Espacio interior */
+}
+
+.container > div {
+    border: 1px solid #ccc; /* Borde para visualización */
+    padding: 10px; /* Espacio interior */
+    box-sizing: border-box; /* Incluye padding y border en el tamaño total */
+}
+
 h1, h2, h3 {
     color: white;
     padding: 20px;
@@ -106,4 +119,3 @@ footer {
     text-align: center;
     padding: 5px;
 }
-

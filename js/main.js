@@ -257,21 +257,29 @@ function mostrarResumenPago() {
     const resumenDiv = document.createElement('div') 
     resumenDiv.id = 'modal-reserva' 
     resumenDiv.innerHTML = `
-        <h1>Resumen de tu compra</h1>
-        <h2>Datos del vuelo</h2>
-        <p>Destino: ${reservaActual.destino}</p>
-        <p>Fecha: ${reservaActual.anio}-${reservaActual.mes}-${reservaActual.dia}</p>
-        <p>Horario: ${reservaActual.horario}</p>
-        <h2>Datos del pasajero</h2>
-        <p>Nombre: ${pasajeroActual.nombrePasajero}</p>
-        <p>DNI: ${pasajeroActual.dni}</p>
-        <p>Celular: ${pasajeroActual.celular}</p>
-        <p>Fecha de nacimiento: ${pasajeroActual.fechaDeNacimiento}</p>
-        <p>Email: ${pasajeroActual.email}</p>
-        <h2>Datos del pago</h2>
-        <p>Tarjeta: ${pagoActual.tarjeta}</p>
-        <p>Cuotas: ${pagoActual.cuotas}</p>
-        <p>Total por cuota: $${pagoActual.totalPorCuota}</p>
+    <div class="container">
+        <div>
+            <h1>Resumen de tu compra</h1>
+            <h2>Datos del vuelo</h2>
+            <p>Destino: ${reservaActual.destino}</p>
+            <p>Fecha: ${reservaActual.anio}-${reservaActual.mes}-${reservaActual.dia}</p>
+            <p>Horario: ${reservaActual.horario}</p>
+        </div>
+        <div>
+            <h2>Datos del pasajero</h2>
+            <p>Nombre: ${pasajeroActual.nombrePasajero}</p>
+            <p>DNI: ${pasajeroActual.dni}</p>
+            <p>Celular: ${pasajeroActual.celular}</p>
+            <p>Fecha de nacimiento: ${pasajeroActual.fechaDeNacimiento}</p>
+            <p>Email: ${pasajeroActual.email}</p>
+        </div>
+        <div>
+            <h2>Datos del pago</h2>
+            <p>Tarjeta: ${pagoActual.tarjeta}</p>
+            <p>Cuotas: ${pagoActual.cuotas}</p>
+            <p>Total por cuota: $${pagoActual.totalPorCuota}</p>
+        </div>
+    </div>
     ` 
     const botonAceptar = crearBoton('aceptar', 'Aceptar', 'boton-reserva', () => {
         mostrarReservaExitosa() 
@@ -387,7 +395,3 @@ function mostrarError(mensaje) {
 }
 
 menuReserva()
-
-
-//Revisar lo de funciones de orden superior ya esta el forEach, sumar una preexistente x las dudas
-//Hacer magia con css
