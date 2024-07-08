@@ -79,6 +79,10 @@ function menuReserva() {
     const destinos = ["Mendoza", "Cordoba", "Neuquen", "Tierra del Fuego", "Salta", "Jujuy", "Chubut", "Santa Cruz"] 
     const horarios = ["08:00hs", "09:30hs", "11:00hs", "14:30hs", "17:00hs", "19:45hs", "22:15hs"] 
 
+    destinos.sort((a, b) => {
+        return a.localeCompare(b)
+    })
+
     let menuReservaDiv = document.createElement('div') 
     menuReservaDiv.id = 'modal-reserva' 
 
@@ -166,6 +170,10 @@ function datosPagos() {
     const precio = 70000.00 
     const tarjetas = ["VISA", "MasterCard", "American Express", "Naranja X", "HSBC"] 
     const cuotas = [1, 3, 6, 9, 12, 16, 24] 
+
+    tarjetas.sort((a, b) => {
+        return a.localeCompare(b)
+    })
 
     const datosPagosDiv = document.createElement('div') 
     datosPagosDiv.id = 'modal-reserva' 
