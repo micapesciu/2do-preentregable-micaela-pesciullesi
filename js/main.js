@@ -218,7 +218,6 @@ function guardarDatosReserva() {
     localStorage.setItem('reserva', JSON.stringify(reservaActual));
 
     datosPasajero() 
-    console.log(reservaActual)
 }
 
 // Función para guardar los datos del pasajero
