@@ -91,6 +91,7 @@ h1, h2, h3 {
 }
 
 p{
+    padding: 15px;
     color: white;
     font-family: "Rubik", "Gill Sans";
 }

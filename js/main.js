@@ -1,11 +1,12 @@
 // Clase Reserva
 class Reserva {
-    constructor(destino, horario, anio, mes, dia) {
-        this.destino = destino 
-        this.horario = horario 
-        this.anio = anio 
-        this.mes = mes 
-        this.dia = dia 
+    constructor(destino, horario, anio, mes, dia, numeroReserva) {
+        this.destino = destino
+        this.horario = horario
+        this.anio = anio
+        this.mes = mes
+        this.dia = dia
+        this.numeroReserva = numeroReserva
     }
 }
 
@@ -90,7 +91,6 @@ function menuReserva() {
         <h2>Seleccioná tu horario</h2>
         <div id="select-horario"></div>
         <div id="botones">
-        </div>
     ` 
 
     document.body.append(menuReservaDiv) 
@@ -133,8 +133,7 @@ function datosPasajero() {
         <div id="input-cumpleanios"></div>
         <h2>Ingresa tu correo electrónico</h2>
         <div id="input-email"></div>
-        <div id="botones">
-        </div>
+        <div id="botones"></div>
     ` 
 
     document.body.appendChild(datosPasajeroDiv) 
@@ -178,8 +177,7 @@ function datosPagos() {
         <h2>Seleccioná el número de cuotas</h2>
         <div id="select-cuotas"></div>
         <h3 id="totalPorCuota">Valor de cada cuota: $70000.00</h3>
-        <div id="botones">
-        </div>
+        <div id="botones"></div>
     ` 
     document.body.appendChild(datosPagosDiv) 
 
@@ -203,39 +201,46 @@ function guardarDatosReserva() {
     const destinoSeleccionado = document.getElementById('destinos').value 
     const fechaSeleccionada = document.getElementById('calendario').value 
     const horarioSeleccionado = document.getElementById('horarios').value 
+    const numeroReserva = generarNumeroReserva();
 
     const [anio, mes, dia] = fechaSeleccionada.split('-') 
 
     // Crear instancia de Reserva
-    reservaActual = new Reserva(destinoSeleccionado, horarioSeleccionado, anio, mes, dia) 
+    reservaActual = new Reserva(destinoSeleccionado, horarioSeleccionado, anio, mes, dia, numeroReserva) 
+    localStorage.setItem('reserva', JSON.stringify(reservaActual));
 
     datosPasajero() 
+    console.log(reservaActual)
 }
 
 // Función para guardar los datos del pasajero
 function guardarDatosPasajero() {
-    const nombreIngresado = document.getElementById('nombre').value 
-    const dniIngresado = document.getElementById('dni').value 
-    const celularIngresado = document.getElementById('celular').value 
-    const cumpleaniosIngresado = document.getElementById('cumpleanios').value 
-    const emailIngresado = document.getElementById('email').value 
+    const nombreIngresado = document.getElementById('nombre').value;
+    const dniIngresado = document.getElementById('dni').value;
+    const celularIngresado = document.getElementById('celular').value;
+    const cumpleaniosIngresado = document.getElementById('cumpleanios').value;
+    const emailIngresado = document.getElementById('email').value;
 
     // Crear instancia de Pasajero
-    pasajeroActual = new Pasajero(nombreIngresado, dniIngresado, celularIngresado, cumpleaniosIngresado, emailIngresado) 
+    pasajeroActual = new Pasajero(nombreIngresado, dniIngresado, celularIngresado, cumpleaniosIngresado, emailIngresado);
 
-    datosPagos() 
+    localStorage.setItem('pasajero', JSON.stringify(pasajeroActual));
+
+    datosPagos();
 }
 
 // Función para guardar los datos de pago
 function guardarDatosPago() {
-    const tarjetaSeleccionada = document.getElementById('tarjetas').value 
-    const cuotasSeleccionadas = document.getElementById('cuotas').value 
-    const precio = 70000.00 
+    const tarjetaSeleccionada = document.getElementById('tarjetas').value;
+    const cuotasSeleccionadas = document.getElementById('cuotas').value;
+    const precio = 70000.00;
 
     // Crear instancia de Pago
-    pagoActual = new Pago(tarjetaSeleccionada, cuotasSeleccionadas, precio) 
+    pagoActual = new Pago(tarjetaSeleccionada, cuotasSeleccionadas, precio);
 
-    mostrarResumenPago() 
+    localStorage.setItem('pago', JSON.stringify(pagoActual));
+
+    mostrarResumenPago();
 }
 
 // Función para mostrar el resumen del pago
@@ -264,33 +269,41 @@ function mostrarResumenPago() {
     const botonAceptar = crearBoton('aceptar', 'Aceptar', 'boton-reserva', () => {
         mostrarReservaExitosa() 
     }) 
-
+    
     resumenDiv.appendChild(botonAceptar) 
     document.body.appendChild(resumenDiv) 
 }
 
 //Funcion para mostrar que la reserva se realizó con éxito
 function mostrarReservaExitosa() {
-    const mostrarResumenPago = document.getElementById('modal-reserva')
-    if (mostrarResumenPago) {
-        mostrarResumenPago.remove()
-    }
+    eliminarElementoSiExiste('modal-reserva')
 
-    // Crear el modal de resumen de pago
-    const reservaExitosa = document.createElement('div') 
-    reservaExitosa.id = 'modal-reserva' 
+    const reserva = JSON.parse( localStorage.getItem('reserva'))
+
+    const reservaExitosa = document.createElement('div')
+    reservaExitosa.id = 'modal-reserva'
     reservaExitosa.innerHTML = `
         <h1>¡Reserva exitosa!</h1>
-        <h2>¡Muchas gracias por elegir Aerolineas PilotHouse!</h2>
+        <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse!</h2>
         <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
-
-        <button id="aceptar" class="boton-reserva">Aceptar</button>
+        <p>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></p>
+        <div id="botones">
     `
-    document.body.appendChild(reservaExitosa) 
+    document.body.appendChild(reservaExitosa)
 
-    document.getElementById('aceptar').addEventListener('click', () => {
+    document.getElementById('botones').appendChild(crearBoton('botonAceptar', 'Aceptar', 'boton-reserva', () => {
         window.location.href = '../index.html' 
-    }) 
+    })) 
+}
+
+// Función para generar un número de reserva aleatorio
+function generarNumeroReserva() {
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    let numeroReserva = ''
+    for (let i = 0; i < 8; i++) {
+        numeroReserva += caracteres.charAt(Math.floor(Math.random() * caracteres.length))
+    }
+    return numeroReserva
 }
 
 // Función para validar los formularios
@@ -310,8 +323,64 @@ function validarFormulario(formulario) {
     return formularioValido
 }
 
+// Verificar que se está en la página consulta.html
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.location.pathname.includes('consulta.html')) {
+        consultaReserva()
+    }
+})
+
+//Consulta de reserva
+function consultaReserva() {
+    const consultaReservaDiv = document.getElementById('modal-reserva');
+    consultaReservaDiv.innerHTML = `
+        <h2>Ingrese su código de reserva</h2>
+        <div>
+            <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva">
+            <div id="botones"></div>
+            <div id="botones">
+        </div>
+        <div id="detalleReserva"></div>
+    `;
+
+    document.getElementById('botones').appendChild(
+        crearBoton('botonConsultar', 'Consultar', 'boton-reserva', () => {
+            const codigoReserva = document.getElementById('codigoReserva').value.trim();
+            if (codigoReserva) {
+                const reserva = JSON.parse(localStorage.getItem('reserva'));
+                if (reserva && reserva.numeroReserva === codigoReserva) {
+                    mostrarDetallesReserva(reserva);
+                } else {
+                    mostrarError('Código de reserva no encontrado. Por favor, verifica el código ingresado.');
+                }
+            } else {
+                mostrarError('Por favor, ingresa un código de reserva.');
+            }
+        })
+    );
+
+    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'boton-reserva', () => {
+        window.location.href = '../index.html' 
+    })) 
+}
+
+function mostrarDetallesReserva(reserva) {
+    const detalleReservaDiv = document.getElementById('detalleReserva');
+    detalleReservaDiv.innerHTML = `
+        <h3>Detalles de la Reserva</h3>
+        <p><strong>Destino:</strong> ${reserva.destino}</p>
+        <p><strong>Fecha:</strong> ${reserva.anio}-${reserva.mes}-${reserva.dia}</p>
+        <p><strong>Horario:</strong> ${reserva.horario}</p>
+    `;
+}
+
+function mostrarError(mensaje) {
+    const detalleReservaDiv = document.getElementById('detalleReserva');
+    detalleReservaDiv.innerHTML = `<p class="error">${mensaje}</p>`;
+}
+
 menuReserva()
 
+
 //Revisar lo de funciones de orden superior ya esta el forEach, sumar una preexistente x las dudas
-//Falta storage
 //Hacer magia con css
