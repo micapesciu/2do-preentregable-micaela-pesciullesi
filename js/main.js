@@ -36,33 +36,65 @@ function crearBoton(id, texto, clase, evento) {
     boton.id = id 
     boton.className = clase 
     boton.textContent = texto 
+    boton.style.padding = '10px'
+    boton.style.margin = '10px'
     boton.addEventListener('click', evento) 
     return boton 
 }
 
 // Función de orden superior para crear un select con opciones
 function crearSelect(id, opciones) {
-    let select = document.createElement('select') 
-    select.id = id 
+    let select = document.createElement('select')
+    select.id = id
+    select.className = 'form-select'
 
     opciones.forEach(opcion => {
-        let opt = document.createElement('option') 
-        opt.value = opcion 
-        opt.textContent = opcion 
-        select.appendChild(opt) 
-    }) 
+        let opt = document.createElement('option')
+        opt.value = opcion
+        opt.textContent = opcion
+        select.appendChild(opt)
+    })
 
-    return select 
+    return select
 }
 
 // Función de orden superior para crear un input
 function crearInput(id, tipo, placeholder, requerido = false) {
-    let input = document.createElement('input') 
-    input.id = id 
-    input.type = tipo 
-    input.placeholder = placeholder 
-    if (requerido) input.required = true 
-    return input 
+    const contenedor = document.createElement('div')
+    contenedor.className = 'mb-3'
+
+    const label = document.createElement('label')
+    label.htmlFor = id
+    label.className = 'form-label'
+
+    let input = document.createElement('input')
+    input.id = id
+    input.type = tipo
+    input.placeholder = placeholder
+    input.style.width = '100%'
+    input.className = 'form-control'
+
+    if (requerido) input.required = true
+
+    //Valida que solo se ingresen numeros
+    if (id === 'dni' || id === 'celular') {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, '');
+            const isValid = (id === 'dni' && input.value.length === 8) || (id === 'celular' && input.value.length >= 10 && input.value.length <= 15);
+            input.classList.toggle('is-invalid', !isValid);
+        });
+    }
+
+    //Valida que el mail contenga @
+    if (id === 'email') {
+        input.addEventListener('input', () => {
+            input.classList.toggle('is-invalid', !input.checkValidity())
+        })
+    }
+    contenedor.appendChild(label)
+    contenedor.appendChild(input)
+
+    return contenedor
 }
 
 // Función de orden superior para eliminar un elemento 
@@ -100,16 +132,16 @@ function menuReserva() {
     document.body.append(menuReservaDiv) 
 
     document.getElementById('select-destino').appendChild(crearSelect('destinos', destinos)) 
-    document.getElementById('input-fecha').appendChild(crearInput('calendario', 'text', 'Busca una fecha', true)) 
+    document.getElementById('input-fecha').appendChild(crearInput('calendario', 'text', 'Busca una fecha (*)', true)) 
     document.getElementById('select-horario').appendChild(crearSelect('horarios', horarios)) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'boton-reserva', () => {
+    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'btn btn-primary', () => {
         if (validarFormulario(menuReservaDiv)) {
             guardarDatosReserva() 
         }
     })) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'boton-reserva', () => {
+    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'btn btn-outline-danger', () => {
         window.location.href = '../index.html' 
     })) 
 
@@ -138,23 +170,23 @@ function datosPasajero() {
         <h2>Ingresa tu correo electrónico</h2>
         <div id="input-email"></div>
         <div id="botones"></div>
-    ` 
+    `
 
     document.body.appendChild(datosPasajeroDiv) 
 
-    document.getElementById('input-nombre').appendChild(crearInput('nombre', 'text', 'Ingresa tu nombre', true)) 
-    document.getElementById('input-dni').appendChild(crearInput('dni', 'text', 'Ingresa tu DNI', true)) 
-    document.getElementById('input-celular').appendChild(crearInput('celular', 'text', 'Ingresa tu número de celular', true)) 
-    document.getElementById('input-cumpleanios').appendChild(crearInput('cumpleanios', 'text', 'Busca tu cumpleaños', true)) 
-    document.getElementById('input-email').appendChild(crearInput('email', 'email', 'Ingresa tu correo electrónico', true)) 
+    document.getElementById('input-nombre').appendChild(crearInput('nombre', 'text', 'Ingresa tu nombre (*)', true)) 
+    document.getElementById('input-dni').appendChild(crearInput('dni', 'text', 'Ingresa tu DNI (*)', true)) 
+    document.getElementById('input-celular').appendChild(crearInput('celular', 'text', 'Ingresa tu número de celular (*)', true)) 
+    document.getElementById('input-cumpleanios').appendChild(crearInput('cumpleanios', 'text', 'Busca tu cumpleaños (*)', true)) 
+    document.getElementById('input-email').appendChild(crearInput('email', 'email', 'Ingresa tu correo electrónico (*)', true)) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'boton-reserva', () => {
+    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'btn btn-primary', () => {
         if (validarFormulario(datosPasajeroDiv)) {
             guardarDatosPasajero() 
         }
     })) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonAtras', 'Atrás', 'boton-reserva', menuReserva)) 
+    document.getElementById('botones').appendChild(crearBoton('botonAtras', 'Atrás', 'btn btn-outline-warning', menuReserva));
 
     // Inicialización de flatpickr para el input de fecha
     flatpickr("#cumpleanios", {
@@ -192,8 +224,8 @@ function datosPagos() {
     document.getElementById('select-tarjeta').appendChild(crearSelect('tarjetas', tarjetas)) 
     document.getElementById('select-cuotas').appendChild(crearSelect('cuotas', cuotas.map(c => `${c} cuota${c > 1 ? 's' : ''}`))) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'boton-reserva', guardarDatosPago)) 
-    document.getElementById('botones').appendChild(crearBoton('botonAtras', 'Atrás', 'boton-reserva', datosPasajero)) 
+    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'btn btn-primary', guardarDatosPago)) 
+    document.getElementById('botones').appendChild(crearBoton('botonAtras', 'Atrás', 'btn btn-outline-warning', datosPasajero)) 
 
     document.getElementById('cuotas').addEventListener('change', () => {
         const cuotasSeleccionadas = parseInt(document.getElementById('cuotas').value, 10) 
@@ -281,7 +313,7 @@ function mostrarResumenPago() {
         </div>
     </div>
     ` 
-    const botonAceptar = crearBoton('aceptar', 'Aceptar', 'boton-reserva', () => {
+    const botonAceptar = crearBoton('aceptar', 'Aceptar', 'btn btn-primary', () => {
         mostrarReservaExitosa() 
     }) 
     
@@ -306,7 +338,7 @@ function mostrarReservaExitosa() {
     `
     document.body.appendChild(reservaExitosa)
 
-    document.getElementById('botones').appendChild(crearBoton('botonAceptar', 'Aceptar', 'boton-reserva', () => {
+    document.getElementById('botones').appendChild(crearBoton('botonAceptar', 'Aceptar', 'btn btn-primary', () => {
         window.location.href = '../index.html' 
     })) 
 }
@@ -359,7 +391,7 @@ function consultaReserva() {
     `;
 
     document.getElementById('botones').appendChild(
-        crearBoton('botonConsultar', 'Consultar', 'boton-reserva', () => {
+        crearBoton('botonConsultar', 'Consultar', 'btn btn-primary', () => {
             const codigoReserva = document.getElementById('codigoReserva').value.trim();
             if (codigoReserva) {
                 const reserva = JSON.parse(localStorage.getItem('reserva'));
@@ -374,7 +406,7 @@ function consultaReserva() {
         })
     );
 
-    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'boton-reserva', () => {
+    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'btn btn-outline-danger', () => {
         window.location.href = '../index.html' 
     })) 
 }

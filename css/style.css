@@ -24,7 +24,7 @@ header img {
     height: 85px;
 }
 header nav ul {
-    font-family: "rubik", "Gill Sans";
+    font-family: "Rubik", "Gill Sans", sans-serif;
     list-style-type: none;
     display: flex;
 }
@@ -51,22 +51,9 @@ header nav ul li a:hover {
     align-items: center; 
     height: 70vh; 
     font-size: 2rem;
-    font-family: "Rubik", "Gill Sans";
+    font-family: "Rubik", "Gill Sans", sans-serif;
     color: whitesmoke;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9); /* Sombra */
-}
-
-.boton-reserva{
-    display: inline-block; 
-    margin: 10px;
-    background-color: #004aad;
-    margin-top: 30px;
-    padding: 15px;
-    border-radius: 10px;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra */
-    text-decoration: none;
-    color: whitesmoke;
 }
 
 #modal-reserva {
@@ -79,7 +66,7 @@ header nav ul li a:hover {
     border-radius: 20px;
     margin: 40px 400px;
     height: 70vh; 
-    font-family: "Rubik", "Gill Sans";
+    font-family: "Rubik", "Gill Sans", sans-serif;
     background-color: rgba(29, 30, 43, 0.764);;
     box-shadow: 20px 20px 30px rgba(0, 0, 0.0, 0.9); 
 }
@@ -100,13 +87,13 @@ header nav ul li a:hover {
 h1, h2, h3 {
     color: white;
     padding: 20px;
-    font-family: "Rubik", "Gill Sans";
+    font-family: "Rubik", "Gill Sans", sans-serif;
 }
 
 p{
     padding: 15px;
     color: white;
-    font-family: "Rubik", "Gill Sans";
+    font-family: "Rubik", "Gill Sans", sans-serif;
 }
 
 footer {
