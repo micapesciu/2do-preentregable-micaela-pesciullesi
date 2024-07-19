@@ -476,3 +476,6 @@ function mostrarDetallesReserva(reserva, pasajeroActual) {
 }
 
 menuReserva() 
+
+//Falta arreglar lo de la reserva
+//Falta mas css
