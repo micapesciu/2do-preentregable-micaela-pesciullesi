@@ -230,29 +230,27 @@ function datosPagos() {
 
 // Función para guardar datos de la reserva
 function guardarDatosReserva() {
-  const destino = document.getElementById("selectDestino").value 
-  const horario = document.getElementById("selectHorario").value 
-  const numeroReserva = generarNumeroReserva();
-  const [anio, mes, dia] = document
-    .getElementById("calendario")
-    .value.split("-") 
+  const destino = document.getElementById("selectDestino").value
+  const horario = document.getElementById("selectHorario").value
+  const numeroReserva = generarNumeroReserva()
+  const [anio, mes, dia] = document.getElementById("calendario").value.split("-")
 
-  const reservaActual = new Reserva(destino,horario,anio,mes,dia,numeroReserva) 
-  localStorage.setItem("reservaActual", JSON.stringify(reservaActual)) 
-  datosPasajero() 
+  const reservaActual = new Reserva(destino, horario, anio, mes, dia, numeroReserva)
+  localStorage.setItem("reservaActual", JSON.stringify(reservaActual))
+  datosPasajero()
 }
 
 // Función para guardar datos del pasajero
 function guardarDatosPasajero() {
-  const nombrePasajero = document.getElementById("nombre").value 
-  const dni = document.getElementById("dni").value 
-  const celular = document.getElementById("celular").value 
-  const fechaDeNacimiento = document.getElementById("cumpleanios").value 
-  const email = document.getElementById("email").value 
+  const nombrePasajero = document.getElementById("nombre").value
+  const dni = document.getElementById("dni").value
+  const celular = document.getElementById("celular").value
+  const fechaDeNacimiento = document.getElementById("cumpleanios").value
+  const email = document.getElementById("email").value
 
-  const pasajeroActual = new Pasajero(nombrePasajero,dni,celular,fechaDeNacimiento,email) 
-  localStorage.setItem("pasajeroActual", JSON.stringify(pasajeroActual)) 
-  datosPagos() 
+  const pasajeroActual = new Pasajero(nombrePasajero, dni, celular, fechaDeNacimiento, email)
+  localStorage.setItem("pasajeroActual", JSON.stringify(pasajeroActual))
+  datosPagos()
 }
 
 // Función para guardar datos del pago
@@ -407,12 +405,13 @@ if (event.target.id === "dni" || event.target.id === "celular") {
 // Verificar que se está en la página consulta.html
 document.addEventListener("DOMContentLoaded", () => {
   if (window.location.pathname.includes("consulta.html")) {
-    consultaReserva() 
+    consultaReserva()
   }
-}) 
+})
 
+//Funcion para consultar reserva
 function consultaReserva() {
-  const consultaReservaDiv = document.getElementById("modal-reserva") 
+  const consultaReservaDiv = document.getElementById("modal-reserva")
   consultaReservaDiv.innerHTML = `
     <div id="detalleReserva">
         <h2>Ingrese su código de reserva</h2>
@@ -425,37 +424,38 @@ function consultaReserva() {
             <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
         </div>
     </div>
-    ` 
+    `
+
   // Agrega el evento al botón consultar
-  const botonConsultar = consultaReservaDiv.querySelector("#botonConsultar") 
+  const botonConsultar = consultaReservaDiv.querySelector("#botonConsultar")
   botonConsultar.addEventListener("click", function () {
     if (validarFormulario(consultaReservaDiv)) {
-      const codigoReserva = document.getElementById("codigoReserva").value 
-      const mensajeErrorDiv = document.getElementById("mensajeError") 
+      const codigoReserva = document.getElementById("codigoReserva").value
+      const mensajeErrorDiv = document.getElementById("mensajeError")
 
-      const reserva = JSON.parse(localStorage.getItem("reserva")) 
-      const pasajeroActual = JSON.parse(localStorage.getItem("pasajeroActual")) 
+      const reservaActual = JSON.parse(localStorage.getItem("reservaActual"))
+      const pasajeroActual = JSON.parse(localStorage.getItem("pasajeroActual"))
 
       //Valida si encuentra un código de reserva
-      if (reserva && reserva.numeroReserva === codigoReserva) {
-        mensajeErrorDiv.textContent = "" 
-        mostrarDetallesReserva(reserva, pasajeroActual) 
+      if (reservaActual && reservaActual.numeroReserva === codigoReserva) {
+        mensajeErrorDiv.textContent = ""
+        mostrarDetallesReserva(reservaActual, pasajeroActual)
       } else {
-        mensajeErrorDiv.textContent = "Código de reserva no encontrado" 
+        mensajeErrorDiv.textContent = "Código de reserva no encontrado"
       }
     }
-  }) 
+  })
 
   // Agrega el evento al botón cancelar y vuelve al index
-  const botonCancelar = consultaReservaDiv.querySelector("#botonCancelar") 
+  const botonCancelar = consultaReservaDiv.querySelector("#botonCancelar")
   botonCancelar.addEventListener("click", function () {
-    window.location.href = "../index.html" 
-  }) 
+    window.location.href = "../index.html"
+  })
 }
 
 //Muestra la reserva consultada
 function mostrarDetallesReserva(reserva, pasajeroActual) {
-  const detalleReservaDiv = document.getElementById("detalleReserva") 
+  const detalleReservaDiv = document.getElementById("detalleReserva")
   detalleReservaDiv.innerHTML = `
         <h2>Detalles de la Reserva</h2>
             <p><strong>Destino:</strong> ${reserva.destino}</p>
@@ -466,13 +466,13 @@ function mostrarDetallesReserva(reserva, pasajeroActual) {
         <div id="botones">
             <button id="botonAceptar" class="btn btn-primary my-2">Aceptar</button>
         </div>
-        ` 
+        `
 
-  // Agrega el evento al boton aceptar
-  const botonAceptar = detalleReservaDiv.querySelector("#botonAceptar") 
+  // Agrega el evento al botón aceptar
+  const botonAceptar = detalleReservaDiv.querySelector("#botonAceptar")
   botonAceptar.addEventListener("click", function () {
-    window.location.href = "../index.html" 
-  }) 
+    window.location.href = "../index.html"
+  })
 }
 
 menuReserva() 
