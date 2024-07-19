@@ -1,347 +1,348 @@
 // Clase Reserva
 class Reserva {
-    constructor(destino, horario, anio, mes, dia, numeroReserva) {
-        this.destino = destino
-        this.horario = horario
-        this.anio = anio
-        this.mes = mes
-        this.dia = dia
-        this.numeroReserva = numeroReserva
-    }
+  constructor(destino, horario, anio, mes, dia, numeroReserva) {
+    this.destino = destino 
+    this.horario = horario 
+    this.anio = anio 
+    this.mes = mes 
+    this.dia = dia 
+    this.numeroReserva = numeroReserva 
+  }
 }
 
 // Clase Pasajero
 class Pasajero {
-    constructor(nombrePasajero, dni, celular, fechaDeNacimiento, email) {
-        this.nombrePasajero = nombrePasajero 
-        this.dni = dni 
-        this.celular = celular 
-        this.fechaDeNacimiento = fechaDeNacimiento 
-        this.email = email 
-    }
+  constructor(nombrePasajero, dni, celular, fechaDeNacimiento, email) {
+    this.nombrePasajero = nombrePasajero 
+    this.dni = dni 
+    this.celular = celular 
+    this.fechaDeNacimiento = fechaDeNacimiento 
+    this.email = email 
+  }
 }
 
 // Clase Pago
 class Pago {
-    constructor(tarjeta, cuotas, precio) {
-        this.tarjeta = tarjeta 
-        this.cuotas = parseInt(cuotas, 10) 
-        this.totalPorCuota = (precio / this.cuotas).toFixed(2) 
-    }
+  constructor(tarjeta, cuotas, precio) {
+    this.tarjeta = tarjeta 
+    this.cuotas = parseInt(cuotas, 10) 
+    this.totalPorCuota = (precio / this.cuotas).toFixed(2) 
+  }
 }
 
-// Función de orden superior para crear un botón
-function crearBoton(id, texto, clase, evento) {
-    let boton = document.createElement('button') 
-    boton.id = id 
-    boton.className = clase 
-    boton.textContent = texto 
-    boton.style.padding = '10px'
-    boton.style.margin = '10px'
-    boton.addEventListener('click', evento) 
-    return boton 
-}
-
-// Función de orden superior para crear un select con opciones
-function crearSelect(id, opciones) {
-    let select = document.createElement('select')
-    select.id = id
-    select.className = 'form-select'
-
-    opciones.forEach(opcion => {
-        let opt = document.createElement('option')
-        opt.value = opcion
-        opt.textContent = opcion
-        select.appendChild(opt)
-    })
-
-    return select
-}
-
-// Función de orden superior para crear un input
-function crearInput(id, tipo, placeholder, requerido = false) {
-    const contenedor = document.createElement('div')
-    contenedor.className = 'mb-3'
-
-    const label = document.createElement('label')
-    label.htmlFor = id
-    label.className = 'form-label'
-
-    let input = document.createElement('input')
-    input.id = id
-    input.type = tipo
-    input.placeholder = placeholder
-    input.style.width = '100%'
-    input.className = 'form-control'
-
-    if (requerido) input.required = true
-
-    //Valida que solo se ingresen numeros
-    if (id === 'dni' || id === 'celular') {
-        input.addEventListener('input', () => {
-            input.value = input.value.replace(/[^0-9]/g, '');
-            const isValid = (id === 'dni' && input.value.length === 8) || (id === 'celular' && input.value.length >= 10 && input.value.length <= 15);
-            input.classList.toggle('is-invalid', !isValid);
-        });
-    }
-
-    //Valida que el mail contenga @
-    if (id === 'email') {
-        input.addEventListener('input', () => {
-            input.classList.toggle('is-invalid', !input.checkValidity())
-        })
-    }
-    contenedor.appendChild(label)
-    contenedor.appendChild(input)
-
-    return contenedor
-}
-
-// Función de orden superior para eliminar un elemento 
+// Función de orden superior para eliminar un elemento
 function eliminarElementoSiExiste(id) {
-    const elemento = document.getElementById(id) 
-    if (elemento) elemento.remove() 
+  const elemento = document.getElementById(id)
+  if (elemento) elemento.remove() 
 }
 
-// Inicio de Menu - Pide datos del vuelo
+// Inicio de Menu - Pide datos de la reserva del vuelo
 function menuReserva() {
-    eliminarElementoSiExiste('modal-reserva') 
+  eliminarElementoSiExiste("modal-reserva")
 
-    // Carga de destinos y horarios en los combos
-    const destinos = ["Mendoza", "Cordoba", "Neuquen", "Tierra del Fuego", "Salta", "Jujuy", "Chubut", "Santa Cruz"] 
-    const horarios = ["08:00hs", "09:30hs", "11:00hs", "14:30hs", "17:00hs", "19:45hs", "22:15hs"] 
+  const destinos = ["Mendoza","Cordoba","Neuquen","Tierra del Fuego","Salta","Jujuy","Chubut","Santa Cruz",]
+  const horarios = ["08:00hs","09:30hs","11:00hs","14:30hs","17:00hs","19:45hs","22:15hs",] 
 
-    destinos.sort((a, b) => {
-        return a.localeCompare(b)
-    })
-
-    let menuReservaDiv = document.createElement('div') 
-    menuReservaDiv.id = 'modal-reserva' 
-
-    menuReservaDiv.innerHTML = `
+  const menuReservaDiv = document.createElement("div") 
+  menuReservaDiv.id = "modal-reserva" 
+  menuReservaDiv.innerHTML = `
         <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
+
         <h2>Seleccioná tu destino</h2>
-        <div id="select-destino"></div>
+        <select id="selectDestino" name="selectDestino" class="form-select w-50" required>
+            <option value="">Selecciona tu destino (*)</option>
+        </select>
+
         <h2>Seleccioná la fecha</h2>
-        <div id="input-fecha"></div>
+        <input id="calendario" type="text" placeholder="Selecciona una fecha (*)" class="form-control w-50" required> 
+
         <h2>Seleccioná tu horario</h2>
-        <div id="select-horario"></div>
+        <select id="selectHorario" name="selectHorario" class="form-select w-50" required>
+            <option value="">Selecciona tu horario (*)</option>
+        </select>
+
         <div id="botones">
+            <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
+            <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
+        </div>
     ` 
 
-    document.body.append(menuReservaDiv) 
+  document.body.appendChild(menuReservaDiv) 
 
-    document.getElementById('select-destino').appendChild(crearSelect('destinos', destinos)) 
-    document.getElementById('input-fecha').appendChild(crearInput('calendario', 'text', 'Busca una fecha (*)', true)) 
-    document.getElementById('select-horario').appendChild(crearSelect('horarios', horarios)) 
+  // Agrega las opciones de destino al select
+  const selectDestino = menuReservaDiv.querySelector("#selectDestino") 
+  destinos.sort((a, b) => a.localeCompare(b)) 
+  destinos.forEach((destino) => {
+    const option = document.createElement("option") 
+    option.value = destino 
+    option.textContent = destino 
+    selectDestino.appendChild(option) 
+  }) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'btn btn-primary', () => {
-        if (validarFormulario(menuReservaDiv)) {
-            guardarDatosReserva() 
-        }
-    })) 
+  // Agregar opciones de horarios al select
+  const selectHorario = menuReservaDiv.querySelector("#selectHorario") 
+  horarios.forEach((horario) => {
+    const option = document.createElement("option") 
+    option.value = horario 
+    option.textContent = horario 
+    selectHorario.appendChild(option) 
+  }) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'btn btn-outline-danger', () => {
-        window.location.href = '../index.html' 
-    })) 
+  // Agrega el evento al boton siguiente
+  const botonSiguiente = menuReservaDiv.querySelector("#botonSiguiente") 
+  botonSiguiente.addEventListener("click", function () {
+    if (validarFormulario(menuReservaDiv)) {
+      guardarDatosReserva() 
+    }
+  }) 
 
-    // Inicialización de flatpickr para el input de fecha
-    flatpickr("#calendario", {
-        dateFormat: "Y-m-d",
-        minDate: "today"
-    }) 
+  // Agrega el evento al boton cancelar y vuelve al index
+  const botonCancelar = menuReservaDiv.querySelector("#botonCancelar") 
+  botonCancelar.addEventListener("click", function () {
+    window.location.href = "../index.html" 
+  }) 
+
+  // Inicialización de flatpickr para el input de fecha
+  flatpickr("#calendario", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+  }) 
 }
 
-//Pide datos del pasajero
 function datosPasajero() {
-    eliminarElementoSiExiste('modal-reserva') 
+  eliminarElementoSiExiste("modal-reserva") 
 
-    const datosPasajeroDiv = document.createElement('div') 
-    datosPasajeroDiv.id = 'modal-reserva' 
-    datosPasajeroDiv.innerHTML = `
-        <h2>Ingresa tu nombre</h2>
-        <div id="input-nombre"></div>
+  const datosPasajeroDiv = document.createElement("div") 
+  datosPasajeroDiv.id = "modal-reserva" 
+  datosPasajeroDiv.innerHTML = `
+        <h2>Ingresa tu Nombre y Apellido</h2>
+            <input type="text" id="nombre" name="nombre" required>
+        
         <h2>Ingresa tu DNI</h2>
-        <div id="input-dni"></div>
+            <input type="number" id="dni" name="dni" required>
+
         <h2>Ingresa tu número de celular</h2>
-        <div id="input-celular"></div>
+            <input type="number" id="celular" name="celular" required>
+
         <h2>Ingresa tu fecha de nacimiento</h2>
-        <div id="input-cumpleanios"></div>
+            <input type="" id="cumpleanios" name="fechaNacimiento" required>
+
         <h2>Ingresa tu correo electrónico</h2>
-        <div id="input-email"></div>
-        <div id="botones"></div>
-    `
+            <input type="email" id="email" name="email" required>
 
-    document.body.appendChild(datosPasajeroDiv) 
+        <div id="botones">
+            <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
+            <button id="botonAtras" class="btn btn-outline-warning my-3">Atrás</button>
+        </div>
+    ` 
+  document.body.appendChild(datosPasajeroDiv) 
 
-    document.getElementById('input-nombre').appendChild(crearInput('nombre', 'text', 'Ingresa tu nombre (*)', true)) 
-    document.getElementById('input-dni').appendChild(crearInput('dni', 'text', 'Ingresa tu DNI (*)', true)) 
-    document.getElementById('input-celular').appendChild(crearInput('celular', 'text', 'Ingresa tu número de celular (*)', true)) 
-    document.getElementById('input-cumpleanios').appendChild(crearInput('cumpleanios', 'text', 'Busca tu cumpleaños (*)', true)) 
-    document.getElementById('input-email').appendChild(crearInput('email', 'email', 'Ingresa tu correo electrónico (*)', true)) 
+  // Agrega el evento al boton siguiente
+  const botonSiguiente = datosPasajeroDiv.querySelector("#botonSiguiente") 
+  botonSiguiente.addEventListener("click", function () {
+    if (validarFormulario(datosPasajeroDiv)) {
+      guardarDatosPasajero() 
+    }
+  }) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'btn btn-primary', () => {
-        if (validarFormulario(datosPasajeroDiv)) {
-            guardarDatosPasajero() 
-        }
-    })) 
+  // Agrega el evento al boton atras
+  const botonAtras = datosPasajeroDiv.querySelector("#botonAtras") 
+  botonAtras.addEventListener("click", menuReserva) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonAtras', 'Atrás', 'btn btn-outline-warning', menuReserva));
-
-    // Inicialización de flatpickr para el input de fecha
-    flatpickr("#cumpleanios", {
-        dateFormat: "Y-m-d",
-        maxDate: "today"
-    }) 
+  // Inicialización de flatpickr para el input de fecha
+  flatpickr("#cumpleanios", {
+    dateFormat: "Y-m-d",
+    maxDate: "today",
+  }) 
 }
 
-//Pide realizar el pago
 function datosPagos() {
-    eliminarElementoSiExiste('modal-reserva') 
+  eliminarElementoSiExiste("modal-reserva") 
 
-    const precio = 70000.00 
-    const tarjetas = ["VISA", "MasterCard", "American Express", "Naranja X", "HSBC"] 
-    const cuotas = [1, 3, 6, 9, 12, 16, 24] 
+  const precio = 70000.0 
+  const tarjetas = ["VISA","MasterCard","American Express","Naranja X","HSBC",] 
+  const cuotas = [1, 3, 6, 9, 12, 16, 24] 
 
-    tarjetas.sort((a, b) => {
-        return a.localeCompare(b)
-    })
-
-    const datosPagosDiv = document.createElement('div') 
-    datosPagosDiv.id = 'modal-reserva' 
-    datosPagosDiv.innerHTML = `
+  const datosPagosDiv = document.createElement("div") 
+  datosPagosDiv.id = "modal-reserva" 
+  datosPagosDiv.innerHTML = `
         <h2>El total de su vuelo con la promoción especial de HOT SALE es de $70.000,00</h2>
         <p>Promoción válida sólo abonando con tarjetas de crédito 💳</p>
+        
         <h2>Seleccioná tu tarjeta</h2>
-        <div id="select-tarjeta"></div>
+        <select id="selectTarjeta" name="selectTarjeta" class="form-select w-50" required>
+            <option value="">Selecciona tu tarjeta (*)</option>
+        </select>
+
         <h2>Seleccioná el número de cuotas</h2>
-        <div id="select-cuotas"></div>
+        <select id="selectCuotas" name="selectCuotas" class="form-select w-50" required>
+            <option value="">Selecciona la cantidad de cuotas (*)</option>
+        </select>
+        
         <h3 id="totalPorCuota">Valor de cada cuota: $70000.00</h3>
-        <div id="botones"></div>
+        
+        <div id="botones">
+            <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
+            <button id="botonAtras" class="btn btn-outline-warning my-3">Atrás</button>
+        </div>
     ` 
-    document.body.appendChild(datosPagosDiv) 
 
-    document.getElementById('select-tarjeta').appendChild(crearSelect('tarjetas', tarjetas)) 
-    document.getElementById('select-cuotas').appendChild(crearSelect('cuotas', cuotas.map(c => `${c} cuota${c > 1 ? 's' : ''}`))) 
+  document.body.appendChild(datosPagosDiv) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonSiguiente', 'Siguiente', 'btn btn-primary', guardarDatosPago)) 
-    document.getElementById('botones').appendChild(crearBoton('botonAtras', 'Atrás', 'btn btn-outline-warning', datosPasajero)) 
+  const selectTarjeta = datosPagosDiv.querySelector("#selectTarjeta") 
+  tarjetas.sort((a, b) => a.localeCompare(b)) 
+  tarjetas.forEach((tarjeta) => {
+    const option = document.createElement("option") 
+    option.value = tarjeta 
+    option.textContent = tarjeta 
+    selectTarjeta.appendChild(option) 
+  }) 
 
-    document.getElementById('cuotas').addEventListener('change', () => {
-        const cuotasSeleccionadas = parseInt(document.getElementById('cuotas').value, 10) 
-        if (!isNaN(cuotasSeleccionadas) && cuotasSeleccionadas > 0) {
-            const totalPorCuota = (precio / cuotasSeleccionadas).toFixed(2) 
-            document.getElementById('totalPorCuota').textContent = `Total por cuota: $${totalPorCuota}` 
-        }
-    }) 
+  const selectCuotas = datosPagosDiv.querySelector("#selectCuotas") 
+  cuotas.forEach((cuota) => {
+    const option = document.createElement("option") 
+    option.value = cuota 
+    option.textContent = cuota 
+    selectCuotas.appendChild(option) 
+  }) 
+
+  // Agrega el evento al boton siguiente
+  const botonSiguiente = datosPagosDiv.querySelector("#botonSiguiente") 
+  botonSiguiente.addEventListener("click", function () {
+    if (validarFormulario(datosPagosDiv)) {
+      guardarDatosPago() 
+    }
+  }) 
+
+  // Agrega el evento al boton atras
+  const botonAtras = datosPagosDiv.querySelector("#botonAtras") 
+  botonAtras.addEventListener("click", datosPasajero) 
+
+  selectCuotas.addEventListener("change", (event) => {
+    const tarjeta = selectTarjeta.value 
+    const cuotas = event.target.value 
+    const pago = new Pago(tarjeta, cuotas, precio) 
+    document.getElementById(
+      "totalPorCuota"
+    ).innerText = `Valor de cada cuota: $${pago.totalPorCuota}` 
+  }) 
 }
 
-// Función para guardar los datos de la reserva
+// Función para guardar datos de la reserva
 function guardarDatosReserva() {
-    const destinoSeleccionado = document.getElementById('destinos').value 
-    const fechaSeleccionada = document.getElementById('calendario').value 
-    const horarioSeleccionado = document.getElementById('horarios').value 
-    const numeroReserva = generarNumeroReserva();
+  const destino = document.getElementById("selectDestino").value 
+  const horario = document.getElementById("selectHorario").value 
+  const numeroReserva = generarNumeroReserva();
+  const [anio, mes, dia] = document
+    .getElementById("calendario")
+    .value.split("-") 
 
-    const [anio, mes, dia] = fechaSeleccionada.split('-') 
-
-    // Crear instancia de Reserva
-    reservaActual = new Reserva(destinoSeleccionado, horarioSeleccionado, anio, mes, dia, numeroReserva) 
-    localStorage.setItem('reserva', JSON.stringify(reservaActual));
-
-    datosPasajero() 
+  const reservaActual = new Reserva(destino,horario,anio,mes,dia,numeroReserva) 
+  localStorage.setItem("reservaActual", JSON.stringify(reservaActual)) 
+  datosPasajero() 
 }
 
-// Función para guardar los datos del pasajero
+// Función para guardar datos del pasajero
 function guardarDatosPasajero() {
-    const nombreIngresado = document.getElementById('nombre').value;
-    const dniIngresado = document.getElementById('dni').value;
-    const celularIngresado = document.getElementById('celular').value;
-    const cumpleaniosIngresado = document.getElementById('cumpleanios').value;
-    const emailIngresado = document.getElementById('email').value;
+  const nombrePasajero = document.getElementById("nombre").value 
+  const dni = document.getElementById("dni").value 
+  const celular = document.getElementById("celular").value 
+  const fechaDeNacimiento = document.getElementById("cumpleanios").value 
+  const email = document.getElementById("email").value 
 
-    // Crear instancia de Pasajero
-    pasajeroActual = new Pasajero(nombreIngresado, dniIngresado, celularIngresado, cumpleaniosIngresado, emailIngresado);
-
-    localStorage.setItem('pasajero', JSON.stringify(pasajeroActual));
-
-    datosPagos();
+  const pasajeroActual = new Pasajero(nombrePasajero,dni,celular,fechaDeNacimiento,email) 
+  localStorage.setItem("pasajeroActual", JSON.stringify(pasajeroActual)) 
+  datosPagos() 
 }
 
-// Función para guardar los datos de pago
+// Función para guardar datos del pago
 function guardarDatosPago() {
-    const tarjetaSeleccionada = document.getElementById('tarjetas').value;
-    const cuotasSeleccionadas = document.getElementById('cuotas').value;
-    const precio = 70000.00;
+  const tarjeta = document.getElementById("selectTarjeta").value 
+  const cuotas = document.getElementById("selectCuotas").value 
+  const reservaActual = JSON.parse(localStorage.getItem("reservaActual")) 
+  const pasajeroActual = JSON.parse(localStorage.getItem("pasajeroActual")) 
+  const pago = new Pago(tarjeta, cuotas, 70000.0) 
 
-    // Crear instancia de Pago
-    pagoActual = new Pago(tarjetaSeleccionada, cuotasSeleccionadas, precio);
-
-    localStorage.setItem('pago', JSON.stringify(pagoActual));
-
-    mostrarResumenPago();
+  mostrarResumenPago(reservaActual, pasajeroActual, pago) 
 }
 
 // Función para mostrar el resumen del pago
-function mostrarResumenPago() {
-    eliminarElementoSiExiste('modal-reserva') 
+function mostrarResumenPago(reserva, pasajero, pago) {
+  eliminarElementoSiExiste("modal-reserva") 
 
-    const resumenDiv = document.createElement('div') 
-    resumenDiv.id = 'modal-reserva' 
-    resumenDiv.innerHTML = `
+  const resumenDiv = document.createElement("div") 
+  resumenDiv.id = "modal-reserva" 
+  resumenDiv.innerHTML = `
     <div class="container">
-        <div>
-            <h1>Resumen de tu compra</h1>
-            <h2>Datos del vuelo</h2>
-            <p>Destino: ${reservaActual.destino}</p>
-            <p>Fecha: ${reservaActual.anio}-${reservaActual.mes}-${reservaActual.dia}</p>
-            <p>Horario: ${reservaActual.horario}</p>
-        </div>
-        <div>
-            <h2>Datos del pasajero</h2>
-            <p>Nombre: ${pasajeroActual.nombrePasajero}</p>
-            <p>DNI: ${pasajeroActual.dni}</p>
-            <p>Celular: ${pasajeroActual.celular}</p>
-            <p>Fecha de nacimiento: ${pasajeroActual.fechaDeNacimiento}</p>
-            <p>Email: ${pasajeroActual.email}</p>
-        </div>
-        <div>
-            <h2>Datos del pago</h2>
-            <p>Tarjeta: ${pagoActual.tarjeta}</p>
-            <p>Cuotas: ${pagoActual.cuotas}</p>
-            <p>Total por cuota: $${pagoActual.totalPorCuota}</p>
-        </div>
+
+    <div>
+        <h2>Resumen del vuelo</h2>
+        <p>Reserva N°: ${reserva.numeroReserva}</p>
+        <p>Destino: ${reserva.destino}</p>
+        <p>Horario: ${reserva.horario}</p>
+        <p>Fecha: ${reserva.dia}/${reserva.mes}/${reserva.anio}</p>
+    </div>
+
+    <div>
+        <h2>Datos del Pasajero</h2>
+        <p>Nombre: ${pasajero.nombrePasajero}</p>
+        <p>DNI: ${pasajero.dni}</p>
+        <p>Celular: ${pasajero.celular}</p>
+        <p>Fecha de Nacimiento: ${pasajero.fechaDeNacimiento}</p>
+        <p>Email: ${pasajero.email}</p>
+    </div>
+
+    <div>
+        <h2>Pago</h2>
+        <p>Tarjeta: ${pago.tarjeta}</p>
+        <p>Cuotas: ${pago.cuotas}</p>
+        <p>Valor de cada cuota: $${pago.totalPorCuota}</p>
+    </div>
+    </div>
+
+    <div id="botones">
+        <button id="botonConfirmar" class="btn btn-success my-2">Confirmar</button>
+        <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
     </div>
     ` 
-    const botonAceptar = crearBoton('aceptar', 'Aceptar', 'btn btn-primary', () => {
-        mostrarReservaExitosa() 
-    }) 
-    
-    resumenDiv.appendChild(botonAceptar) 
-    document.body.appendChild(resumenDiv) 
+
+  document.body.appendChild(resumenDiv) 
+
+  // Agrega el evento al boton confirmar
+  const botonConfirmar = resumenDiv.querySelector("#botonConfirmar") 
+  botonConfirmar.addEventListener("click", mostrarReservaExitosa) 
+
+  // Agrega el evento al boton cancelar
+  const botonCancelar = resumenDiv.querySelector("#botonCancelar") 
+  botonCancelar.addEventListener("click", function () {
+    window.location.href = "../index.html" 
+  }) 
 }
 
-//Funcion para mostrar que la reserva se realizó con éxito
+//Muestra la reserva exitosa
 function mostrarReservaExitosa() {
-    eliminarElementoSiExiste('modal-reserva')
-
-    const reserva = JSON.parse( localStorage.getItem('reserva'))
-
-    const reservaExitosa = document.createElement('div')
-    reservaExitosa.id = 'modal-reserva'
+    eliminarElementoSiExiste("modal-reserva");
+  
+    const reserva = JSON.parse(localStorage.getItem("reservaActual")); // Asegúrate de que se esté recuperando la reserva guardada
+    const pasajero = JSON.parse(localStorage.getItem("pasajeroActual")); // Asegúrate de que se esté recuperando el pasajero guardado
+  
+    const reservaExitosa = document.createElement("div");
+    reservaExitosa.id = "modal-reserva";
     reservaExitosa.innerHTML = `
-        <h1>¡Reserva exitosa!</h1>
-        <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse!</h2>
-        <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
-        <p>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></p>
-        <div id="botones">
-    `
-    document.body.appendChild(reservaExitosa)
-
-    document.getElementById('botones').appendChild(crearBoton('botonAceptar', 'Aceptar', 'btn btn-primary', () => {
-        window.location.href = '../index.html' 
-    })) 
-}
+          <h1>¡Reserva exitosa!</h1>
+          <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse!</h2>
+          <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
+          <p>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></p>
+          <button id="botonAceptar" class="btn btn-success my-2">Aceptar</button>
+      `;
+    document.body.appendChild(reservaExitosa);
+  
+    // Agrega el evento al botón aceptar
+    const botonAceptar = reservaExitosa.querySelector("#botonAceptar");
+    botonAceptar.addEventListener("click", function () {
+      window.location.href = "../index.html";
+    });
+  }
 
 // Función para generar un número de reserva aleatorio
 function generarNumeroReserva() {
@@ -353,77 +354,125 @@ function generarNumeroReserva() {
     return numeroReserva
 }
 
-// Función para validar los formularios
+//Validaciones
 function validarFormulario(formulario) {
-    let camposRequeridos = formulario.querySelectorAll('input[required]')
+    const inputs = formulario.querySelectorAll("input, select")
     let formularioValido = true
-
-    camposRequeridos.forEach(campo => {
-        if (!campo.value) {
-            campo.style.borderColor = 'red'
+  
+    for (const input of inputs) {
+      input.style.border = ""
+  
+      if (input.hasAttribute("required") && !input.value) {
+        input.style.border = "2px solid red"
+        formularioValido = false
+        continue
+      }
+  
+      switch (input.id) {
+        case "dni":
+          if (input.value.length > 8) {
+            input.value = input.value.slice(0, 8);
+            input.style.border = "2px solid red"
             formularioValido = false
-        } else {
-            campo.style.borderColor = ''
-        }
-    }) 
-
+          }
+          break
+        case "celular":
+          if (input.value.length > 15) {
+            input.value = input.value.slice(0, 15)
+            input.style.border = "2px solid red"
+            formularioValido = false
+          }
+          break
+        case "email":
+            const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
+            if (!emailPattern.test(input.value)) {
+            input.style.border = "2px solid red"
+            formularioValido = false
+            }
+            break
+      }
+    }
     return formularioValido
 }
+  
+document.addEventListener("input", function(event) {
+if (event.target.id === "dni" || event.target.id === "celular") {
+    const maxLength = event.target.id === "dni" ? 8 : 15;
+    if (event.target.value.length > maxLength) {
+    event.target.value = event.target.value.slice(0, maxLength);
+    }
+}
+});
 
 // Verificar que se está en la página consulta.html
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.includes('consulta.html')) {
-        consultaReserva()
-    }
-})
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("consulta.html")) {
+    consultaReserva() 
+  }
+}) 
 
-//Consulta de reserva
 function consultaReserva() {
-    const consultaReservaDiv = document.getElementById('modal-reserva');
-    consultaReservaDiv.innerHTML = `
+  const consultaReservaDiv = document.getElementById("modal-reserva") 
+  consultaReservaDiv.innerHTML = `
+    <div id="detalleReserva">
         <h2>Ingrese su código de reserva</h2>
         <div>
-            <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva">
-            <div id="botones"></div>
-            <div id="botones">
+            <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva" required>
         </div>
-        <div id="detalleReserva"></div>
-    `;
+        <div id="mensajeError" style="color: red "></div>
+        <div id="botones">
+            <button id="botonConsultar" class="btn btn-primary my-2">Consultar</button>
+            <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
+        </div>
+    </div>
+    ` 
+  // Agrega el evento al botón consultar
+  const botonConsultar = consultaReservaDiv.querySelector("#botonConsultar") 
+  botonConsultar.addEventListener("click", function () {
+    if (validarFormulario(consultaReservaDiv)) {
+      const codigoReserva = document.getElementById("codigoReserva").value 
+      const mensajeErrorDiv = document.getElementById("mensajeError") 
 
-    document.getElementById('botones').appendChild(
-        crearBoton('botonConsultar', 'Consultar', 'btn btn-primary', () => {
-            const codigoReserva = document.getElementById('codigoReserva').value.trim();
-            if (codigoReserva) {
-                const reserva = JSON.parse(localStorage.getItem('reserva'));
-                if (reserva && reserva.numeroReserva === codigoReserva) {
-                    mostrarDetallesReserva(reserva);
-                } else {
-                    mostrarError('Código de reserva no encontrado. Por favor, verifica el código ingresado.');
-                }
-            } else {
-                mostrarError('Por favor, ingresa un código de reserva.');
-            }
-        })
-    );
+      const reserva = JSON.parse(localStorage.getItem("reserva")) 
+      const pasajeroActual = JSON.parse(localStorage.getItem("pasajeroActual")) 
 
-    document.getElementById('botones').appendChild(crearBoton('botonCancelar', 'Cancelar', 'btn btn-outline-danger', () => {
-        window.location.href = '../index.html' 
-    })) 
+      //Valida si encuentra un código de reserva
+      if (reserva && reserva.numeroReserva === codigoReserva) {
+        mensajeErrorDiv.textContent = "" 
+        mostrarDetallesReserva(reserva, pasajeroActual) 
+      } else {
+        mensajeErrorDiv.textContent = "Código de reserva no encontrado" 
+      }
+    }
+  }) 
+
+  // Agrega el evento al botón cancelar y vuelve al index
+  const botonCancelar = consultaReservaDiv.querySelector("#botonCancelar") 
+  botonCancelar.addEventListener("click", function () {
+    window.location.href = "../index.html" 
+  }) 
 }
 
-function mostrarDetallesReserva(reserva) {
-    const detalleReservaDiv = document.getElementById('detalleReserva');
-    detalleReservaDiv.innerHTML = `
-        <h3>Detalles de la Reserva</h3>
-        <p><strong>Destino:</strong> ${reserva.destino}</p>
-        <p><strong>Fecha:</strong> ${reserva.anio}-${reserva.mes}-${reserva.dia}</p>
-        <p><strong>Horario:</strong> ${reserva.horario}</p>
-    `;
+//Muestra la reserva consultada
+function mostrarDetallesReserva(reserva, pasajeroActual) {
+  const detalleReservaDiv = document.getElementById("detalleReserva") 
+  detalleReservaDiv.innerHTML = `
+        <h2>Detalles de la Reserva</h2>
+            <p><strong>Destino:</strong> ${reserva.destino}</p>
+            <p><strong>Fecha:</strong> ${reserva.anio}-${reserva.mes}-${reserva.dia}</p>
+            <p><strong>Horario:</strong> ${reserva.horario}</p>
+            <p><strong>Pasajero:</strong> ${pasajeroActual.nombrePasajero}</p>
+
+        <div id="botones">
+            <button id="botonAceptar" class="btn btn-primary my-2">Aceptar</button>
+        </div>
+        ` 
+
+  // Agrega el evento al boton aceptar
+  const botonAceptar = detalleReservaDiv.querySelector("#botonAceptar") 
+  botonAceptar.addEventListener("click", function () {
+    window.location.href = "../index.html" 
+  }) 
 }
 
-function mostrarError(mensaje) {
-    const detalleReservaDiv = document.getElementById('detalleReserva');
-    detalleReservaDiv.innerHTML = `<p class="error">${mensaje}</p>`;
-}
-
-menuReserva()
+menuReserva() 
