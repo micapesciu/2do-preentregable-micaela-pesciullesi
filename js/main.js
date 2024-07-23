@@ -174,6 +174,10 @@ function datosPagos() {
             <option value="">Selecciona tu tarjeta (*)</option>
         </select>
 
+        <h2>Ingresá tu tarjeta</h2>
+          <input type="number" id="numeroTarjeta" name="numeroTarjeta" required>    
+          <div id="tarjetaError" style="color: red;"></div>        
+
         <h2>Seleccioná el número de cuotas</h2>
         <select id="selectCuotas" name="selectCuotas" class="form-select w-50" required>
             <option value="">Selecciona la cantidad de cuotas (*)</option>
@@ -226,7 +230,33 @@ function datosPagos() {
       "totalPorCuota"
     ).innerText = `Valor de cada cuota: $${pago.totalPorCuota}` 
   }) 
+
 }
+
+////////////////////////
+//API tarjeta
+////////////////////////
+
+/*const validarTarjeta = async () => {
+  let URL = 'https://api.stripe.com'
+  const errorTarjeta = '<span>La tarjeta ingresada es inválida</span>'
+  let renderizado = ''
+
+  try {
+    let solicitud = await fetch(URL)
+    let response = await solicitud.json()
+
+    response.forEach(tarjeta => {
+      renderizado += `
+      <p>Tarjeta válida: ${tarjeta.}</p>
+      `
+    })
+  }
+}*/
+
+////////////////////////
+//FIN API tarjeta
+////////////////////////
 
 // Función para guardar datos de la reserva
 function guardarDatosReserva() {
@@ -477,5 +507,3 @@ function mostrarDetallesReserva(reserva, pasajeroActual) {
 
 menuReserva() 
 
-//Falta arreglar lo de la reserva
-//Falta mas css
