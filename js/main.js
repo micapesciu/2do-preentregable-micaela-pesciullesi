@@ -116,19 +116,19 @@ function datosPasajero() {
   datosPasajeroDiv.id = "modal-reserva" 
   datosPasajeroDiv.innerHTML = `
         <h2>Ingresa tu Nombre y Apellido</h2>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="nombre" class="w-50" required>
         
         <h2>Ingresa tu DNI</h2>
-            <input type="number" id="dni" name="dni" required>
+            <input type="number" id="dni" name="dni" class="w-50" required>
 
         <h2>Ingresa tu número de celular</h2>
-            <input type="number" id="celular" name="celular" required>
+            <input type="number" id="celular" name="celular" class="w-50" required>
 
         <h2>Ingresa tu fecha de nacimiento</h2>
-            <input type="" id="cumpleanios" name="fechaNacimiento" required>
+            <input type="" id="cumpleanios" name="fechaNacimiento" class="w-50" required>
 
         <h2>Ingresa tu correo electrónico</h2>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" class="w-50" required>
 
         <div id="botones">
             <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
@@ -174,9 +174,12 @@ function datosPagos() {
             <option value="">Selecciona tu tarjeta (*)</option>
         </select>
 
-        <h2>Ingresá tu tarjeta</h2>
-          <input type="number" id="numeroTarjeta" name="numeroTarjeta" required>    
+        <h2>Ingresá el número de tu tarjeta</h2>
+          <input type="number" id="numeroTarjeta" name="numeroTarjeta" class="w-50" required>    
           <div id="tarjetaError" style="color: red;"></div>        
+
+        <h2>Ingresá el código de seguridad</h2>
+          <input type="number" id="codigoSeguridad" name="codigoSeguridad" class="w-50" required>      
 
         <h2>Seleccioná el número de cuotas</h2>
         <select id="selectCuotas" name="selectCuotas" class="form-select w-50" required>
@@ -231,6 +234,16 @@ function datosPagos() {
     ).innerText = `Valor de cada cuota: $${pago.totalPorCuota}` 
   }) 
 
+  setTimeout(() => {
+    const ayuda = document.createElement("div")
+    ayuda.id = "modal-ayuda"
+    ayuda.innerHTML = `
+    <div class="alert alert-info" role="alert">
+      Si necesitas ayuda con tu pago llamá al 0800-251-963-851 para comunicarte con un asesor comercial 👨‍✈️​👩‍✈️​
+    </div>
+    `
+    document.body.appendChild(ayuda); // Agregar el div al cuerpo del documento
+}, 10000)
 }
 
 ////////////////////////
@@ -296,7 +309,7 @@ function guardarDatosPago() {
 
 // Función para mostrar el resumen del pago
 function mostrarResumenPago(reserva, pasajero, pago) {
-  eliminarElementoSiExiste("modal-reserva") 
+  eliminarElementoSiExiste("modal-reserva")
 
   const resumenDiv = document.createElement("div") 
   resumenDiv.id = "modal-reserva" 
@@ -399,7 +412,7 @@ function validarFormulario(formulario) {
       switch (input.id) {
         case "dni":
           if (input.value.length > 8) {
-            input.value = input.value.slice(0, 8);
+            input.value = input.value.slice(0, 8)
             input.style.border = "2px solid red"
             formularioValido = false
           }
@@ -416,6 +429,20 @@ function validarFormulario(formulario) {
             if (!emailPattern.test(input.value)) {
             input.style.border = "2px solid red"
             formularioValido = false
+            }
+            break
+        case "numeroTarjeta":
+            if (input.value.length > 16) { 
+                input.value = input.value.slice(0, 16)
+                input.style.border = "2px solid red"
+                formularioValido = false
+            }
+            break
+        case "codigoSeguridad":
+            if (input.value.length > 3) { 
+                input.value = input.value.slice(0, 3)
+                input.style.border = "2px solid red"
+                formularioValido = false
             }
             break
       }
