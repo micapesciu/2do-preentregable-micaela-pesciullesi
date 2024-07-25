@@ -342,6 +342,27 @@ function guardarDatosPago() {
       throw new Error("Faltan datos para realizar el pago")
     }
 
+    let timerInterval;
+    Swal.fire({
+      title: "Reserva en proceso",
+      html: "Se está procesando tu vuelo",
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: () => {
+        Swal.showLoading();
+        const timer = Swal.getPopup().querySelector("b");
+        timerInterval = setInterval(() => {
+        timer.textContent = `${Swal.getTimerLeft()}`;
+      }, 100);
+    },
+    willClose: () => {
+      clearInterval(timerInterval);
+    }
+  }).then((result) => {
+    if (result.dismiss === Swal.DismissReason.timer) {
+    }
+  });
+
     mostrarResumenPago(reservaActual, pasajeroActual, pago) 
 
   } catch (error) {
@@ -398,14 +419,31 @@ function mostrarResumenPago(reserva, pasajero, pago) {
 
   document.body.appendChild(resumenDiv) 
 
-  // Agrega el evento al boton confirmar
-  const botonConfirmar = resumenDiv.querySelector("#botonConfirmar") 
-  botonConfirmar.addEventListener("click", mostrarReservaExitosa) 
+  const botonConfirmar = resumenDiv.querySelector("#botonConfirmar")
+  botonConfirmar.addEventListener("click", function() {
+    Swal.fire({
+      title: "Vuelo confirmado",
+      text: "Pago confirmado con éxito",
+      icon: "success"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mostrarReservaExitosa();
+      }
+    });
+  });
 
   // Agrega el evento al boton cancelar
   const botonCancelar = resumenDiv.querySelector("#botonCancelar") 
   botonCancelar.addEventListener("click", function () {
-    window.location.href = "../index.html" 
+    Swal.fire({
+      title: "Pago cancelado",
+      text: "Cancelaste el pago de tu vuelo. Vas a volver al inicio",
+      icon: "error"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = "../index.html" 
+      }
+    });
   }) 
 }
 
