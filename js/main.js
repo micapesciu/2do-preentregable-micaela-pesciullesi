@@ -327,13 +327,11 @@ function guardarDatosPago() {
     mostrarResumenPago(reservaActual, pasajeroActual, pago) 
 
   } catch (error) {
-    const errorPago = document.createElement("div")
-    errorPago.id = "mensajeError"
-    errorPago.innerHTML = `
-    <div class="alert alert-danger" role="alert">
-      No se pudo realizar el pago. Por favor, inténtalo de nuevo más tarde.
-    </div>
-  `
+    Swal.fire({
+      title: "No se pudo realizar el pago",
+      text: "Por favor, inténtalo de nuevo más tarde",
+      icon: "error"
+    });
   document.body.appendChild(errorPago)
   }
 }
@@ -530,13 +528,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function consultaReserva() {
   const consultaReservaDiv = document.getElementById("modal-reserva")
   consultaReservaDiv.innerHTML = `
-        <h1>Ingrese su código de reserva ✈️🕵️</h1>
-        <h2>Para consultar los datos de su vuelo ingrese un código de reserva</h2>
-        <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva" class="form-control w-50" required>
-        <div id="botones">
-            <button id="botonConsultar" class="btn btn-primary my-2">Consultar</button>
-            <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
-        </div>
+    <div id="detalleReserva" style="text-align: center;">
+      <h2>Ingrese su código de reserva 🕵️✈️</h2>
+      <p>Para ver los detalles de su vuelo ingrese un código de reserva</p>
+      <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva" class="form-control" style="display: block; margin: 0 auto; width: 50%;" required>
+      <div id="botones">
+        <button id="botonConsultar" class="btn btn-primary my-2">Consultar</button>
+        <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
+      </div>
+    </div>
     `
 
   // Agrega el evento al botón consultar
@@ -551,7 +551,6 @@ function consultaReserva() {
 
       //Valida si encuentra un código de reserva
       if (reservaActual && reservaActual.numeroReserva === codigoReserva) {
-        mensajeErrorDiv.textContent = ""
         mostrarDetallesReserva(reservaActual, pasajeroActual)
       } else {
         Swal.fire({
