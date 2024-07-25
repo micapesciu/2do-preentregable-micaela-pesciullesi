@@ -40,12 +40,9 @@ function eliminarElementoSiExiste(id) {
 function menuReserva() {
   eliminarElementoSiExiste("modal-reserva")
 
-  const destinos = ["Mendoza","Cordoba","Neuquen","Tierra del Fuego","Salta","Jujuy","Chubut","Santa Cruz",]
-  const horarios = ["08:00hs","09:30hs","11:00hs","14:30hs","17:00hs","19:45hs","22:15hs",] 
-
-  const menuReservaDiv = document.createElement("div") 
-  menuReservaDiv.id = "modal-reserva" 
-  menuReservaDiv.innerHTML = `
+      const menuReservaDiv = document.createElement("div")
+      menuReservaDiv.id = "modal-reserva"
+      menuReservaDiv.innerHTML = `
         <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
 
         <h2>Seleccioná tu destino</h2>
@@ -65,48 +62,53 @@ function menuReserva() {
             <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
             <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
         </div>
-    ` 
+      `
 
-  document.body.appendChild(menuReservaDiv) 
+      document.body.appendChild(menuReservaDiv)
 
-  // Agrega las opciones de destino al select
-  const selectDestino = menuReservaDiv.querySelector("#selectDestino") 
-  destinos.sort((a, b) => a.localeCompare(b)) 
-  destinos.forEach((destino) => {
-    const option = document.createElement("option") 
-    option.value = destino 
-    option.textContent = destino 
-    selectDestino.appendChild(option) 
-  }) 
+      // Obtener los datos del JSON
+      fetch('../db/data.JSON')
+      .then(response => response.json())
+      .then(data => {
+        // Agrega las opciones de destino al select
+        const selectDestino = menuReservaDiv.querySelector("#selectDestino")
+        data.destinos.sort((a, b) => a.localeCompare(b))
+        data.destinos.forEach(destino => {
+          const option = document.createElement("option")
+          option.value = destino
+          option.textContent = destino
+          selectDestino.appendChild(option)
+        })
 
-  // Agregar opciones de horarios al select
-  const selectHorario = menuReservaDiv.querySelector("#selectHorario") 
-  horarios.forEach((horario) => {
-    const option = document.createElement("option") 
-    option.value = horario 
-    option.textContent = horario 
-    selectHorario.appendChild(option) 
-  }) 
+        // Agregar opciones de horarios al select
+        const selectHorario = menuReservaDiv.querySelector("#selectHorario")
+        data.horarios.forEach(horario => {
+          const option = document.createElement("option")
+          option.value = horario
+          option.textContent = horario
+          selectHorario.appendChild(option)
+        })
 
-  // Agrega el evento al boton siguiente
-  const botonSiguiente = menuReservaDiv.querySelector("#botonSiguiente") 
-  botonSiguiente.addEventListener("click", function () {
-    if (validarFormulario(menuReservaDiv)) {
-      guardarDatosReserva() 
-    }
-  }) 
+      // Agrega el evento al boton siguiente
+      const botonSiguiente = menuReservaDiv.querySelector("#botonSiguiente")
+      botonSiguiente.addEventListener("click", function () {
+        if (validarFormulario(menuReservaDiv)) {
+          guardarDatosReserva()
+        }
+      })
 
-  // Agrega el evento al boton cancelar y vuelve al index
-  const botonCancelar = menuReservaDiv.querySelector("#botonCancelar") 
-  botonCancelar.addEventListener("click", function () {
-    window.location.href = "../index.html" 
-  }) 
+      // Agrega el evento al boton cancelar y vuelve al index
+      const botonCancelar = menuReservaDiv.querySelector("#botonCancelar")
+      botonCancelar.addEventListener("click", function () {
+        window.location.href = "../index.html"
+      })
 
-  // Inicialización de flatpickr para el input de fecha
-  flatpickr("#calendario", {
-    dateFormat: "Y-m-d",
-    minDate: "today",
-  }) 
+      // Inicialización de flatpickr para el input de fecha
+      flatpickr("#calendario", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+      })
+    })
 }
 
 function datosPasajero() {
@@ -116,19 +118,19 @@ function datosPasajero() {
   datosPasajeroDiv.id = "modal-reserva" 
   datosPasajeroDiv.innerHTML = `
         <h2>Ingresa tu Nombre y Apellido</h2>
-            <input type="text" id="nombre" name="nombre" required>
+            <input type="text" id="nombre" name="nombre" class="w-50" required>
         
         <h2>Ingresa tu DNI</h2>
-            <input type="number" id="dni" name="dni" required>
+            <input type="number" id="dni" name="dni" class="w-50" required>
 
         <h2>Ingresa tu número de celular</h2>
-            <input type="number" id="celular" name="celular" required>
+            <input type="number" id="celular" name="celular" class="w-50" required>
 
         <h2>Ingresa tu fecha de nacimiento</h2>
-            <input type="" id="cumpleanios" name="fechaNacimiento" required>
+            <input type="" id="cumpleanios" name="fechaNacimiento" class="w-50" required>
 
         <h2>Ingresa tu correo electrónico</h2>
-            <input type="email" id="email" name="email" required>
+            <input type="email" id="email" name="email" class="w-50" required>
 
         <div id="botones">
             <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
@@ -157,80 +159,95 @@ function datosPasajero() {
 }
 
 function datosPagos() {
-  eliminarElementoSiExiste("modal-reserva") 
+  eliminarElementoSiExiste("modal-reserva")
 
-  const precio = 70000.0 
-  const tarjetas = ["VISA","MasterCard","American Express","Naranja X","HSBC",] 
-  const cuotas = [1, 3, 6, 9, 12, 16, 24] 
-
-  const datosPagosDiv = document.createElement("div") 
-  datosPagosDiv.id = "modal-reserva" 
+  const datosPagosDiv = document.createElement("div")
+  datosPagosDiv.id = "modal-reserva"
   datosPagosDiv.innerHTML = `
-        <h2>El total de su vuelo con la promoción especial de HOT SALE es de $70.000,00</h2>
-        <p>Promoción válida sólo abonando con tarjetas de crédito 💳</p>
-        
-        <h2>Seleccioná tu tarjeta</h2>
-        <select id="selectTarjeta" name="selectTarjeta" class="form-select w-50" required>
-            <option value="">Selecciona tu tarjeta (*)</option>
-        </select>
+    <h2>El total de su vuelo con la promoción especial de HOT SALE es de $70.000,00</h2>
+    <p>Promoción válida sólo abonando con tarjetas de crédito 💳</p>
+    
+    <h2>Seleccioná tu tarjeta</h2>
+    <select id="selectTarjeta" name="selectTarjeta" class="form-select w-50" required>
+        <option value="">Selecciona tu tarjeta (*)</option>
+    </select>
 
-        <h2>Ingresá tu tarjeta</h2>
-          <input type="number" id="numeroTarjeta" name="numeroTarjeta" required>    
-          <div id="tarjetaError" style="color: red;"></div>        
+    <h2>Ingresá el número de tu tarjeta</h2>
+    <input type="number" id="numeroTarjeta" name="numeroTarjeta" class="w-50" required>    
+    <div id="tarjetaError" style="color: red;"></div>        
 
-        <h2>Seleccioná el número de cuotas</h2>
-        <select id="selectCuotas" name="selectCuotas" class="form-select w-50" required>
-            <option value="">Selecciona la cantidad de cuotas (*)</option>
-        </select>
-        
-        <h3 id="totalPorCuota">Valor de cada cuota: $70000.00</h3>
-        
-        <div id="botones">
-            <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
-            <button id="botonAtras" class="btn btn-outline-warning my-3">Atrás</button>
-        </div>
-    ` 
+    <h2>Ingresá el código de seguridad</h2>
+    <input type="number" id="codigoSeguridad" name="codigoSeguridad" class="w-50" required>      
 
-  document.body.appendChild(datosPagosDiv) 
+    <h2>Seleccioná el número de cuotas</h2>
+    <select id="selectCuotas" name="selectCuotas" class="form-select w-50" required>
+        <option value="">Selecciona la cantidad de cuotas (*)</option>
+    </select>
+    
+    <h3 id="totalPorCuota">Valor de cada cuota: $70,000.00</h3>
+    
+    <div id="botones">
+        <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
+        <button id="botonAtras" class="btn btn-outline-warning my-3">Atrás</button>
+    </div>
+  `
 
-  const selectTarjeta = datosPagosDiv.querySelector("#selectTarjeta") 
-  tarjetas.sort((a, b) => a.localeCompare(b)) 
-  tarjetas.forEach((tarjeta) => {
-    const option = document.createElement("option") 
-    option.value = tarjeta 
-    option.textContent = tarjeta 
-    selectTarjeta.appendChild(option) 
-  }) 
+  document.body.appendChild(datosPagosDiv)
 
-  const selectCuotas = datosPagosDiv.querySelector("#selectCuotas") 
-  cuotas.forEach((cuota) => {
-    const option = document.createElement("option") 
-    option.value = cuota 
-    option.textContent = cuota 
-    selectCuotas.appendChild(option) 
-  }) 
+  // Obtener los datos del JSON
+  fetch('../db/data.JSON')
+    .then(response => response.json())
+    .then(data => {
+      // Agrega las opciones de tarjeta al select
+      const selectTarjeta = datosPagosDiv.querySelector("#selectTarjeta")
+      data.tarjetas.sort((a, b) => a.localeCompare(b))
+      data.tarjetas.forEach(tarjeta => {
+        const option = document.createElement("option")
+        option.value = tarjeta
+        option.textContent = tarjeta
+        selectTarjeta.appendChild(option)
+      })
+      // Agregar opciones de cuotas al select
+      const selectCuotas = datosPagosDiv.querySelector("#selectCuotas")
+      data.cuotas.forEach(cuota => {
+        const option = document.createElement("option")
+        option.value = cuota
+        option.textContent = cuota
+        selectCuotas.appendChild(option)
+      })
 
-  // Agrega el evento al boton siguiente
-  const botonSiguiente = datosPagosDiv.querySelector("#botonSiguiente") 
-  botonSiguiente.addEventListener("click", function () {
-    if (validarFormulario(datosPagosDiv)) {
-      guardarDatosPago() 
-    }
-  }) 
+      // Agrega el evento al boton siguiente
+      const botonSiguiente = datosPagosDiv.querySelector("#botonSiguiente")
+      botonSiguiente.addEventListener("click", function () {
+        if (validarFormulario(datosPagosDiv)) {
+          guardarDatosPago()
+        }
+      })
 
-  // Agrega el evento al boton atras
-  const botonAtras = datosPagosDiv.querySelector("#botonAtras") 
-  botonAtras.addEventListener("click", datosPasajero) 
+      // Agrega el evento al boton atras
+      const botonAtras = datosPagosDiv.querySelector("#botonAtras")
+      botonAtras.addEventListener("click", datosPasajero)
 
-  selectCuotas.addEventListener("change", (event) => {
-    const tarjeta = selectTarjeta.value 
-    const cuotas = event.target.value 
-    const pago = new Pago(tarjeta, cuotas, precio) 
-    document.getElementById(
-      "totalPorCuota"
-    ).innerText = `Valor de cada cuota: $${pago.totalPorCuota}` 
-  }) 
+      // Actualiza el valor de cada cuota cuando cambie el select de cuotas
+      selectCuotas.addEventListener("change", (event) => {
+        const tarjeta = selectTarjeta.value
+        const cuotas = event.target.value
+        const pago = new Pago(tarjeta, cuotas, data.precio)
+        document.getElementById("totalPorCuota").innerText = `Valor de cada cuota: $${pago.totalPorCuota}`
+      });
 
+      // Muestra mensaje de ayuda después de 5 segundos
+      setTimeout(() => {
+        const ayuda = document.createElement("div")
+        ayuda.id = "modal-ayuda"
+        ayuda.innerHTML = `
+          <div class="alert alert-info" role="alert">
+            Si necesitas ayuda con tu pago llamá al 0800-251-963-851 para comunicarte con un asesor comercial 👨‍✈️​👩‍✈️​
+          </div>
+        `
+        document.body.appendChild(ayuda)
+      }, 5000)
+    })
 }
 
 ////////////////////////
@@ -296,7 +313,7 @@ function guardarDatosPago() {
 
 // Función para mostrar el resumen del pago
 function mostrarResumenPago(reserva, pasajero, pago) {
-  eliminarElementoSiExiste("modal-reserva") 
+  eliminarElementoSiExiste("modal-reserva")
 
   const resumenDiv = document.createElement("div") 
   resumenDiv.id = "modal-reserva" 
@@ -351,10 +368,10 @@ function mostrarResumenPago(reserva, pasajero, pago) {
 function mostrarReservaExitosa() {
     eliminarElementoSiExiste("modal-reserva");
   
-    const reserva = JSON.parse(localStorage.getItem("reservaActual")); // Asegúrate de que se esté recuperando la reserva guardada
-    const pasajero = JSON.parse(localStorage.getItem("pasajeroActual")); // Asegúrate de que se esté recuperando el pasajero guardado
+    const reserva = JSON.parse(localStorage.getItem("reservaActual"))
+    const pasajero = JSON.parse(localStorage.getItem("pasajeroActual"))
   
-    const reservaExitosa = document.createElement("div");
+    const reservaExitosa = document.createElement("div")
     reservaExitosa.id = "modal-reserva";
     reservaExitosa.innerHTML = `
           <h1>¡Reserva exitosa!</h1>
@@ -363,13 +380,13 @@ function mostrarReservaExitosa() {
           <p>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></p>
           <button id="botonAceptar" class="btn btn-success my-2">Aceptar</button>
       `;
-    document.body.appendChild(reservaExitosa);
+    document.body.appendChild(reservaExitosa)
   
     // Agrega el evento al botón aceptar
     const botonAceptar = reservaExitosa.querySelector("#botonAceptar");
     botonAceptar.addEventListener("click", function () {
-      window.location.href = "../index.html";
-    });
+      window.location.href = "../index.html"
+    })
   }
 
 // Función para generar un número de reserva aleatorio
@@ -399,7 +416,7 @@ function validarFormulario(formulario) {
       switch (input.id) {
         case "dni":
           if (input.value.length > 8) {
-            input.value = input.value.slice(0, 8);
+            input.value = input.value.slice(0, 8)
             input.style.border = "2px solid red"
             formularioValido = false
           }
@@ -418,6 +435,20 @@ function validarFormulario(formulario) {
             formularioValido = false
             }
             break
+        case "numeroTarjeta":
+            if (input.value.length > 16) { 
+                input.value = input.value.slice(0, 16)
+                input.style.border = "2px solid red"
+                formularioValido = false
+            }
+            break
+        case "codigoSeguridad":
+            if (input.value.length > 3) { 
+                input.value = input.value.slice(0, 3)
+                input.style.border = "2px solid red"
+                formularioValido = false
+            }
+            break
       }
     }
     return formularioValido
@@ -430,7 +461,7 @@ if (event.target.id === "dni" || event.target.id === "celular") {
     event.target.value = event.target.value.slice(0, maxLength);
     }
 }
-});
+})
 
 // Verificar que se está en la página consulta.html
 document.addEventListener("DOMContentLoaded", () => {
@@ -506,4 +537,3 @@ function mostrarDetallesReserva(reserva, pasajeroActual) {
 }
 
 menuReserva() 
-
