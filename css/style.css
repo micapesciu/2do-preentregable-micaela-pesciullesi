@@ -90,6 +90,14 @@ h1, h2, h3 {
     font-family: "Rubik", "Gill Sans", sans-serif;
 }
 
+h2{
+    font-size: 20px;
+}
+
+input, select{
+    margin: 20px;
+}
+
 p{
     padding: 15px;
     color: white;

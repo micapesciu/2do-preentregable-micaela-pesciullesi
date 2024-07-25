@@ -45,15 +45,13 @@ async function menuReserva() {
   menuReservaDiv.innerHTML = `
     <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
 
-    <h2>Seleccioná tu destino</h2>
+    <h2>Seleccioná los datos del vuelo</h2>
     <select id="selectDestino" name="selectDestino" class="form-select w-50" required>
         <option value="">Selecciona tu destino (*)</option>
     </select>
 
-    <h2>Seleccioná la fecha</h2>
     <input id="calendario" type="text" placeholder="Selecciona una fecha (*)" class="form-control w-50" required> 
 
-    <h2>Seleccioná tu horario</h2>
     <select id="selectHorario" name="selectHorario" class="form-select w-50" required>
         <option value="">Selecciona tu horario (*)</option>
     </select>
@@ -132,20 +130,16 @@ function datosPasajero() {
   const datosPasajeroDiv = document.createElement("div") 
   datosPasajeroDiv.id = "modal-reserva" 
   datosPasajeroDiv.innerHTML = `
-        <h2>Ingresa tu Nombre y Apellido</h2>
-            <input type="text" id="nombre" name="nombre" class="w-50" required>
+        <h2>Ingresa los datos del pasajero</h2>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre y Apellido (*)" class="form-control w-50" required>
         
-        <h2>Ingresa tu DNI</h2>
-            <input type="number" id="dni" name="dni" class="w-50" required>
+            <input type="number" id="dni" name="dni" placeholder="DNI (*)" class="form-control w-50" required>
 
-        <h2>Ingresa tu número de celular</h2>
-            <input type="number" id="celular" name="celular" class="w-50" required>
+            <input type="number" id="celular" name="celular" placeholder="Número de teléfono (*)" class="form-control w-50" required>
 
-        <h2>Ingresa tu fecha de nacimiento</h2>
-            <input type="" id="cumpleanios" name="fechaNacimiento" class="w-50" required>
+            <input type="" id="cumpleanios" name="fechaNacimiento" placeholder="Fecha de Nacimiento (*)" class="form-control w-50" required>
 
-        <h2>Ingresa tu correo electrónico</h2>
-            <input type="email" id="email" name="email" class="w-50" required>
+            <input type="email" id="email" name="email" placeholder="Correo Electrónico (*)" class="form-control w-50" required>
 
         <div id="botones">
             <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
@@ -179,27 +173,24 @@ async function datosPagos() {
   const datosPagosDiv = document.createElement("div")
   datosPagosDiv.id = "modal-reserva"
   datosPagosDiv.innerHTML = `
-    <h2>El total de su vuelo con la promoción especial de HOT SALE es de $70.000,00</h2>
+    <h1>El precio del vuelo con la promoción especial es de $70.000,00</h1>
     <p>Promoción válida sólo abonando con tarjetas de crédito 💳</p>
     
-    <h2>Seleccioná tu tarjeta</h2>
+    <h2>Seleccioná los datos de pago</h2>
     <select id="selectTarjeta" name="selectTarjeta" class="form-select w-50" required>
         <option value="">Selecciona tu tarjeta (*)</option>
     </select>
 
-    <h2>Ingresá el número de tu tarjeta</h2>
-    <input type="number" id="numeroTarjeta" name="numeroTarjeta" class="w-50" required>    
+    <input type="number" id="numeroTarjeta" name="numeroTarjeta" placeholder="Número de tarjeta (*)" class="form-control w-50" required>    
     <div id="tarjetaError" style="color: red;"></div>        
 
-    <h2>Ingresá el código de seguridad</h2>
-    <input type="number" id="codigoSeguridad" name="codigoSeguridad" class="w-50" required>      
+    <input type="number" id="codigoSeguridad" name="codigoSeguridad" placeholder="Código de seguridad (*)" class="form-control w-50" required>      
 
-    <h2>Seleccioná el número de cuotas</h2>
     <select id="selectCuotas" name="selectCuotas" class="form-select w-50" required>
         <option value="">Selecciona la cantidad de cuotas (*)</option>
     </select>
     
-    <h3 id="totalPorCuota">Valor de cada cuota: $70,000.00</h3>
+    <h2 id="totalPorCuota">Valor de cada cuota: $70,000.00</h2>
     
     <div id="botones">
         <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
@@ -235,6 +226,14 @@ async function datosPagos() {
         selectCuotas.appendChild(option)
       })
 
+      // Actualiza el valor de cada cuota cuando cambie el select de cuotas
+      selectCuotas.addEventListener("change", (event) => {
+        const tarjeta = selectTarjeta.value
+        const cuotas = event.target.value
+        const pago = new Pago(tarjeta, cuotas, data.precio)
+        document.getElementById("totalPorCuota").innerText = `Valor de cada cuota: $${pago.totalPorCuota}`
+      });
+
     } catch (error) {
       const errorSelects = document.createElement("div")
       errorSelects.id = "mensajeError"
@@ -258,14 +257,6 @@ async function datosPagos() {
       const botonAtras = datosPagosDiv.querySelector("#botonAtras")
       botonAtras.addEventListener("click", datosPasajero)
 
-      // Actualiza el valor de cada cuota cuando cambie el select de cuotas
-      selectCuotas.addEventListener("change", (event) => {
-        const tarjeta = selectTarjeta.value
-        const cuotas = event.target.value
-        const pago = new Pago(tarjeta, cuotas, data.precio)
-        document.getElementById("totalPorCuota").innerText = `Valor de cada cuota: $${pago.totalPorCuota}`
-      });
-
       // Muestra mensaje de ayuda después de 5 segundos
       setTimeout(() => {
         const ayuda = document.createElement("div")
@@ -278,31 +269,6 @@ async function datosPagos() {
         document.body.appendChild(ayuda)
       }, 5000)
 }
-
-////////////////////////
-//API tarjeta
-////////////////////////
-
-/*const validarTarjeta = async () => {
-  let URL = 'https://api.stripe.com'
-  const errorTarjeta = '<span>La tarjeta ingresada es inválida</span>'
-  let renderizado = ''
-
-  try {
-    let solicitud = await fetch(URL)
-    let response = await solicitud.json()
-
-    response.forEach(tarjeta => {
-      renderizado += `
-      <p>Tarjeta válida: ${tarjeta.}</p>
-      `
-    })
-  }
-}*/
-
-////////////////////////
-//FIN API tarjeta
-////////////////////////
 
 // Función para guardar datos de la reserva
 function guardarDatosReserva() {
@@ -461,6 +427,7 @@ function mostrarReservaExitosa() {
           <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse!</h2>
           <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
           <p>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></p>
+          <p>Recodá que podes elegir asiento al momento de realizar tu check-in</p>
           <button id="botonAceptar" class="btn btn-success my-2">Aceptar</button>
       `;
     document.body.appendChild(reservaExitosa)
@@ -519,15 +486,13 @@ function validarFormulario(formulario) {
             }
             break
         case "numeroTarjeta":
-            if (input.value.length > 16) { 
-                input.value = input.value.slice(0, 16)
+            if (input.value.length !== 16) { 
                 input.style.border = "2px solid red"
                 formularioValido = false
             }
             break
         case "codigoSeguridad":
-            if (input.value.length > 3) { 
-                input.value = input.value.slice(0, 3)
+            if (input.value.length !== 3) { 
                 input.style.border = "2px solid red"
                 formularioValido = false
             }
@@ -538,12 +503,26 @@ function validarFormulario(formulario) {
 }
   
 document.addEventListener("input", function(event) {
-if (event.target.id === "dni" || event.target.id === "celular") {
-    const maxLength = event.target.id === "dni" ? 8 : 15;
-    if (event.target.value.length > maxLength) {
-    event.target.value = event.target.value.slice(0, maxLength);
+  if (event.target.id === "dni" || event.target.id === "celular" || event.target.id === "numeroTarjeta" || event.target.id === "codigoSeguridad") {
+    let maxLength
+    switch(event.target.id) {
+      case "dni":
+        maxLength = 8
+        break
+      case "celular":
+        maxLength = 15
+        break
+      case "numeroTarjeta":
+        maxLength = 16
+        break
+      case "codigoSeguridad":
+        maxLength = 3
+        break
     }
-}
+    if (event.target.value.length > maxLength) {
+      event.target.value = event.target.value.slice(0, maxLength)
+    }
+  }
 })
 
 // Verificar que se está en la página consulta.html
