@@ -37,78 +37,93 @@ function eliminarElementoSiExiste(id) {
 }
 
 // Inicio de Menu - Pide datos de la reserva del vuelo
-function menuReserva() {
+async function menuReserva() {
   eliminarElementoSiExiste("modal-reserva")
 
-      const menuReservaDiv = document.createElement("div")
-      menuReservaDiv.id = "modal-reserva"
-      menuReservaDiv.innerHTML = `
-        <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
+  const menuReservaDiv = document.createElement("div")
+  menuReservaDiv.id = "modal-reserva"
+  menuReservaDiv.innerHTML = `
+    <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
 
-        <h2>Seleccioná tu destino</h2>
-        <select id="selectDestino" name="selectDestino" class="form-select w-50" required>
-            <option value="">Selecciona tu destino (*)</option>
-        </select>
+    <h2>Seleccioná tu destino</h2>
+    <select id="selectDestino" name="selectDestino" class="form-select w-50" required>
+        <option value="">Selecciona tu destino (*)</option>
+    </select>
 
-        <h2>Seleccioná la fecha</h2>
-        <input id="calendario" type="text" placeholder="Selecciona una fecha (*)" class="form-control w-50" required> 
+    <h2>Seleccioná la fecha</h2>
+    <input id="calendario" type="text" placeholder="Selecciona una fecha (*)" class="form-control w-50" required> 
 
-        <h2>Seleccioná tu horario</h2>
-        <select id="selectHorario" name="selectHorario" class="form-select w-50" required>
-            <option value="">Selecciona tu horario (*)</option>
-        </select>
+    <h2>Seleccioná tu horario</h2>
+    <select id="selectHorario" name="selectHorario" class="form-select w-50" required>
+        <option value="">Selecciona tu horario (*)</option>
+    </select>
 
-        <div id="botones">
-            <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
-            <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
-        </div>
-      `
+    <div id="botones">
+        <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
+        <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
+    </div>
+  `
 
-      document.body.appendChild(menuReservaDiv)
+  document.body.appendChild(menuReservaDiv)
 
-      // Obtener los datos del JSON
-      fetch('../db/data.JSON')
-      .then(response => response.json())
-      .then(data => {
-        // Agrega las opciones de destino al select
-        const selectDestino = menuReservaDiv.querySelector("#selectDestino")
-        data.destinos.sort((a, b) => a.localeCompare(b))
-        data.destinos.forEach(destino => {
-          const option = document.createElement("option")
-          option.value = destino
-          option.textContent = destino
-          selectDestino.appendChild(option)
-        })
+  if (window.location.pathname.includes("reserva.html")) {
+  try {
+    const response = await fetch('../db/data.JSON')
+    if (!response.ok) {
+      throw new Error('Ocurrió un error al cargar los destinos y horarios. Intente nuevamente más tarde')
+    }
+    const data = await response.json()
 
-        // Agregar opciones de horarios al select
-        const selectHorario = menuReservaDiv.querySelector("#selectHorario")
-        data.horarios.forEach(horario => {
-          const option = document.createElement("option")
-          option.value = horario
-          option.textContent = horario
-          selectHorario.appendChild(option)
-        })
+    // Agrega las opciones de destino al select
+    const selectDestino = menuReservaDiv.querySelector("#selectDestino")
+    data.destinos.sort((a, b) => a.localeCompare(b))
+    data.destinos.forEach(destino => {
+      const option = document.createElement("option")
+      option.value = destino
+      option.textContent = destino
+      selectDestino.appendChild(option)
+    });
 
-      // Agrega el evento al boton siguiente
-      const botonSiguiente = menuReservaDiv.querySelector("#botonSiguiente")
-      botonSiguiente.addEventListener("click", function () {
-        if (validarFormulario(menuReservaDiv)) {
-          guardarDatosReserva()
-        }
-      })
+    // Agregar opciones de horarios al select
+    const selectHorario = menuReservaDiv.querySelector("#selectHorario")
+    data.horarios.forEach(horario => {
+      const option = document.createElement("option")
+      option.value = horario
+      option.textContent = horario
+      selectHorario.appendChild(option)
+    });
 
-      // Agrega el evento al boton cancelar y vuelve al index
-      const botonCancelar = menuReservaDiv.querySelector("#botonCancelar")
-      botonCancelar.addEventListener("click", function () {
-        window.location.href = "../index.html"
-      })
+  } catch (error) {
+    const errorSelects = document.createElement("div")
+    errorSelects.id = "mensajeError"
+    errorSelects.innerHTML = `
+      <div class="alert alert-danger" role="alert">
+        No se pudieron recuperar los destinos y horarios. Por favor, inténtalo de nuevo más tarde.
+      </div>
+    `
+    document.body.appendChild(errorSelects);
+  }
+}
 
-      // Inicialización de flatpickr para el input de fecha
-      flatpickr("#calendario", {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-      })
-    })
+  // Agrega el evento al boton siguiente
+  const botonSiguiente = menuReservaDiv.querySelector("#botonSiguiente");
+  botonSiguiente.addEventListener("click", function () {
+    if (validarFormulario(menuReservaDiv)) {
+      guardarDatosReserva();
+    }
+  });
+
+  // Agrega el evento al boton cancelar y vuelve al index
+  const botonCancelar = menuReservaDiv.querySelector("#botonCancelar");
+  botonCancelar.addEventListener("click", function () {
+    window.location.href = "../index.html";
+  });
+
+  // Inicialización de flatpickr para el input de fecha
+  flatpickr("#calendario", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+  });
 }
 
 function datosPasajero() {
@@ -158,7 +173,7 @@ function datosPasajero() {
   }) 
 }
 
-function datosPagos() {
+async function datosPagos() {
   eliminarElementoSiExiste("modal-reserva")
 
   const datosPagosDiv = document.createElement("div")
@@ -194,10 +209,13 @@ function datosPagos() {
 
   document.body.appendChild(datosPagosDiv)
 
-  // Obtener los datos del JSON
-  fetch('../db/data.JSON')
-    .then(response => response.json())
-    .then(data => {
+  try {
+    const response = await fetch('../db/data.JSON')
+    if (!response.ok) {
+      throw new Error('Ocurrió un error al cargar los destinos y horarios. Intente nuevamente más tarde')
+    }
+    const data = await response.json()
+
       // Agrega las opciones de tarjeta al select
       const selectTarjeta = datosPagosDiv.querySelector("#selectTarjeta")
       data.tarjetas.sort((a, b) => a.localeCompare(b))
@@ -207,6 +225,7 @@ function datosPagos() {
         option.textContent = tarjeta
         selectTarjeta.appendChild(option)
       })
+
       // Agregar opciones de cuotas al select
       const selectCuotas = datosPagosDiv.querySelector("#selectCuotas")
       data.cuotas.forEach(cuota => {
@@ -215,6 +234,17 @@ function datosPagos() {
         option.textContent = cuota
         selectCuotas.appendChild(option)
       })
+
+    } catch (error) {
+      const errorSelects = document.createElement("div")
+      errorSelects.id = "mensajeError"
+      errorSelects.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+          No se pudieron recuperar las tarjetas. Por favor, inténtalo de nuevo más tarde.
+        </div>
+      `
+      document.body.appendChild(errorSelects)
+    }
 
       // Agrega el evento al boton siguiente
       const botonSiguiente = datosPagosDiv.querySelector("#botonSiguiente")
@@ -247,7 +277,6 @@ function datosPagos() {
         `
         document.body.appendChild(ayuda)
       }, 5000)
-    })
 }
 
 ////////////////////////
@@ -302,13 +331,29 @@ function guardarDatosPasajero() {
 
 // Función para guardar datos del pago
 function guardarDatosPago() {
-  const tarjeta = document.getElementById("selectTarjeta").value 
-  const cuotas = document.getElementById("selectCuotas").value 
-  const reservaActual = JSON.parse(localStorage.getItem("reservaActual")) 
-  const pasajeroActual = JSON.parse(localStorage.getItem("pasajeroActual")) 
-  const pago = new Pago(tarjeta, cuotas, 70000.0) 
+  try {
+    const tarjeta = document.getElementById("selectTarjeta").value 
+    const cuotas = document.getElementById("selectCuotas").value 
+    const reservaActual = JSON.parse(localStorage.getItem("reservaActual")) 
+    const pasajeroActual = JSON.parse(localStorage.getItem("pasajeroActual")) 
+    const pago = new Pago(tarjeta, cuotas, 70000.0) 
 
-  mostrarResumenPago(reservaActual, pasajeroActual, pago) 
+    if (!tarjeta || !cuotas || !reservaActual || !pasajeroActual) {
+      throw new Error("Faltan datos para realizar el pago")
+    }
+
+    mostrarResumenPago(reservaActual, pasajeroActual, pago) 
+
+  } catch (error) {
+    const errorPago = document.createElement("div")
+    errorPago.id = "mensajeError"
+    errorPago.innerHTML = `
+    <div class="alert alert-danger" role="alert">
+      No se pudo realizar el pago. Por favor, inténtalo de nuevo más tarde.
+    </div>
+  `
+  document.body.appendChild(errorPago)
+  }
 }
 
 // Función para mostrar el resumen del pago
