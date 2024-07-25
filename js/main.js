@@ -45,7 +45,7 @@ async function menuReserva() {
   menuReservaDiv.innerHTML = `
     <h1>Bienvenido a Aerolíneas PilotHouse! 👨‍✈️👩‍✈️✈️</h1>
 
-    <h2>Seleccioná los datos del vuelo</h2>
+    <h2>Seleccioná los datos del vuelo 🛫</h2>
     <select id="selectDestino" name="selectDestino" class="form-select w-50" required>
         <option value="">Selecciona tu destino (*)</option>
     </select>
@@ -67,9 +67,6 @@ async function menuReserva() {
   if (window.location.pathname.includes("reserva.html")) {
   try {
     const response = await fetch('../db/data.JSON')
-    if (!response.ok) {
-      throw new Error('Ocurrió un error al cargar los destinos y horarios. Intente nuevamente más tarde')
-    }
     const data = await response.json()
 
     // Agrega las opciones de destino al select
@@ -92,14 +89,11 @@ async function menuReserva() {
     });
 
   } catch (error) {
-    const errorSelects = document.createElement("div")
-    errorSelects.id = "mensajeError"
-    errorSelects.innerHTML = `
-      <div class="alert alert-danger" role="alert">
-        No se pudieron recuperar los destinos y horarios. Por favor, inténtalo de nuevo más tarde.
-      </div>
-    `
-    document.body.appendChild(errorSelects);
+    Swal.fire({
+      title: "No se pudieron recuperar los destinos y horarios.",
+      text: "Por favor, inténtalo de nuevo más tarde.",
+      icon: "error"
+    });
   }
 }
 
@@ -130,7 +124,7 @@ function datosPasajero() {
   const datosPasajeroDiv = document.createElement("div") 
   datosPasajeroDiv.id = "modal-reserva" 
   datosPasajeroDiv.innerHTML = `
-        <h2>Ingresa los datos del pasajero</h2>
+        <h2>Ingresa los datos del pasajero 👩👨‍🦱</h2>
             <input type="text" id="nombre" name="nombre" placeholder="Nombre y Apellido (*)" class="form-control w-50" required>
         
             <input type="number" id="dni" name="dni" placeholder="DNI (*)" class="form-control w-50" required>
@@ -173,10 +167,10 @@ async function datosPagos() {
   const datosPagosDiv = document.createElement("div")
   datosPagosDiv.id = "modal-reserva"
   datosPagosDiv.innerHTML = `
-    <h1>El precio del vuelo con la promoción especial es de $70.000,00</h1>
-    <p>Promoción válida sólo abonando con tarjetas de crédito 💳</p>
+    <h2>El precio del vuelo con la promoción especial es de $70.000,00 💸</h2>
+    <p>Promoción válida sólo abonando con tarjetas de crédito</p>
     
-    <h2>Seleccioná los datos de pago</h2>
+    <h2>Seleccioná los datos de pago 💳</h2>
     <select id="selectTarjeta" name="selectTarjeta" class="form-select w-50" required>
         <option value="">Selecciona tu tarjeta (*)</option>
     </select>
@@ -190,7 +184,7 @@ async function datosPagos() {
         <option value="">Selecciona la cantidad de cuotas (*)</option>
     </select>
     
-    <h2 id="totalPorCuota">Valor de cada cuota: $70,000.00</h2>
+    <h2 id="totalPorCuota">Valor de cada cuota:</h2>
     
     <div id="botones">
         <button id="botonSiguiente" class="btn btn-primary my-2">Siguiente</button>
@@ -202,9 +196,6 @@ async function datosPagos() {
 
   try {
     const response = await fetch('../db/data.JSON')
-    if (!response.ok) {
-      throw new Error('Ocurrió un error al cargar los destinos y horarios. Intente nuevamente más tarde')
-    }
     const data = await response.json()
 
       // Agrega las opciones de tarjeta al select
@@ -235,14 +226,11 @@ async function datosPagos() {
       });
 
     } catch (error) {
-      const errorSelects = document.createElement("div")
-      errorSelects.id = "mensajeError"
-      errorSelects.innerHTML = `
-        <div class="alert alert-danger" role="alert">
-          No se pudieron recuperar las tarjetas. Por favor, inténtalo de nuevo más tarde.
-        </div>
-      `
-      document.body.appendChild(errorSelects)
+      Swal.fire({
+        title: "No se pudieron recuperar las tarjetas.",
+        text: "Por favor, inténtalo de nuevo más tarde.",
+        icon: "error"
+      });
     }
 
       // Agrega el evento al boton siguiente
@@ -259,15 +247,22 @@ async function datosPagos() {
 
       // Muestra mensaje de ayuda después de 5 segundos
       setTimeout(() => {
-        const ayuda = document.createElement("div")
-        ayuda.id = "modal-ayuda"
-        ayuda.innerHTML = `
-          <div class="alert alert-info" role="alert">
-            Si necesitas ayuda con tu pago llamá al 0800-251-963-851 para comunicarte con un asesor comercial 👨‍✈️​👩‍✈️​
-          </div>
-        `
-        document.body.appendChild(ayuda)
-      }, 5000)
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "bottom-end",
+          showConfirmButton: false,
+          timer: 10000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "info",
+          title: "Si necesitas ayuda con tu pago llamá al 0800-8451-5621 para comunicarte con un asesor 📞."
+        });
+      }, 3000)
 }
 
 // Función para guardar datos de la reserva
@@ -353,7 +348,7 @@ function mostrarResumenPago(reserva, pasajero, pago) {
     <div class="container">
 
     <div>
-        <h2>Resumen del vuelo</h2>
+        <h2>Resumen del vuelo ✈️</h2>
         <p>Reserva N°: ${reserva.numeroReserva}</p>
         <p>Destino: ${reserva.destino}</p>
         <p>Horario: ${reserva.horario}</p>
@@ -361,7 +356,7 @@ function mostrarResumenPago(reserva, pasajero, pago) {
     </div>
 
     <div>
-        <h2>Datos del Pasajero</h2>
+        <h2>Datos del Pasajero 👩👨‍🦱</h2>
         <p>Nombre: ${pasajero.nombrePasajero}</p>
         <p>DNI: ${pasajero.dni}</p>
         <p>Celular: ${pasajero.celular}</p>
@@ -370,7 +365,7 @@ function mostrarResumenPago(reserva, pasajero, pago) {
     </div>
 
     <div>
-        <h2>Pago</h2>
+        <h2>Pago 💳</h2>
         <p>Tarjeta: ${pago.tarjeta}</p>
         <p>Cuotas: ${pago.cuotas}</p>
         <p>Valor de cada cuota: $${pago.totalPorCuota}</p>
@@ -424,9 +419,8 @@ function mostrarReservaExitosa() {
     reservaExitosa.id = "modal-reserva";
     reservaExitosa.innerHTML = `
           <h1>¡Reserva exitosa!</h1>
-          <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse!</h2>
-          <h3>Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h3>
-          <p>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></p>
+          <h2>¡Muchas gracias por elegir Aerolíneas PilotHouse! Te esperamos a bordo 👨‍✈️👩‍✈️✈️</h2>
+          <h3>Tu número de reserva es: <strong>${reserva.numeroReserva}</strong></h3>
           <p>Recodá que podes elegir asiento al momento de realizar tu check-in</p>
           <button id="botonAceptar" class="btn btn-success my-2">Aceptar</button>
       `;
@@ -441,12 +435,12 @@ function mostrarReservaExitosa() {
 
 // Función para generar un número de reserva aleatorio
 function generarNumeroReserva() {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    let numeroReserva = ''
-    for (let i = 0; i < 8; i++) {
-        numeroReserva += caracteres.charAt(Math.floor(Math.random() * caracteres.length))
-    }
-    return numeroReserva
+  const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  let numeroReserva = ''
+  for (let i = 0; i < 8; i++) {
+    numeroReserva += caracteres.charAt(Math.floor(Math.random() * caracteres.length))
+  }
+  return numeroReserva
 }
 
 //Validaciones
@@ -536,17 +530,13 @@ document.addEventListener("DOMContentLoaded", () => {
 function consultaReserva() {
   const consultaReservaDiv = document.getElementById("modal-reserva")
   consultaReservaDiv.innerHTML = `
-    <div id="detalleReserva">
-        <h2>Ingrese su código de reserva</h2>
-        <div>
-            <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva" required>
-        </div>
-        <div id="mensajeError" style="color: red "></div>
+        <h1>Ingrese su código de reserva ✈️🕵️</h1>
+        <h2>Para consultar los datos de su vuelo ingrese un código de reserva</h2>
+        <input type="text" id="codigoReserva" placeholder="Ingrese su código de reserva" class="form-control w-50" required>
         <div id="botones">
             <button id="botonConsultar" class="btn btn-primary my-2">Consultar</button>
             <button id="botonCancelar" class="btn btn-outline-danger my-3">Cancelar</button>
         </div>
-    </div>
     `
 
   // Agrega el evento al botón consultar
@@ -564,7 +554,11 @@ function consultaReserva() {
         mensajeErrorDiv.textContent = ""
         mostrarDetallesReserva(reservaActual, pasajeroActual)
       } else {
-        mensajeErrorDiv.textContent = "Código de reserva no encontrado"
+        Swal.fire({
+          title: "Reserva no encontrada",
+          text: "Ingresá nuevamente el código",
+          icon: "error"
+        });
       }
     }
   })
